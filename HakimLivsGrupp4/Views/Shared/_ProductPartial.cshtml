@@ -1,0 +1,28 @@
+﻿@model IEnumerable<HakimLivsGrupp4.Models.Product>
+
+
+<div class="d-flex justify-content-center flex-wrap gap-2">
+
+    @foreach (var item in Model)
+    {
+
+        <div class="card text-center" style="width: 15rem;">
+            <div class="card-body">
+                <img src="@Html.DisplayFor(modelItem => item.ImgPath)" class="img" alt="@Html.DisplayFor(modelItem => item.Name)" />
+                <p>@Html.DisplayFor(modelItem => item.Price) kr/st</p>
+                <p class="card-title">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </p>
+                <div class="mb-1">
+                    <span>@Html.DisplayFor(modelItem => item.Brand)</span> |
+                    <span>@Html.DisplayFor(modelItem => item.Weight) g</span>
+                </div>
+
+                @*<p class="card-text">@Html.DisplayFor(modelItem => item.Description).</p>*@
+
+                <a href="#" class="btn btn-primary">Köp</a>
+            </div>
+        </div>
+    }
+
+</div>
