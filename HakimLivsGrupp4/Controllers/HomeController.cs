@@ -1,6 +1,7 @@
 ﻿using HakimLivsGrupp4.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using HakimLivsGrupp4.Services;
 
 namespace HakimLivsGrupp4.Controllers
 {
@@ -8,14 +9,19 @@ namespace HakimLivsGrupp4.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private IEnumerable<Product> Products { get; set; }
+        private readonly ProductService _productService;
+
+        public HomeController(ILogger<HomeController> logger, ProductService productService)
         {
             _logger = logger;
+            _productService = productService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+            Products = await _productService.GetProducts();
+            return View(Products);
         }
 
         public IActionResult Privacy()
