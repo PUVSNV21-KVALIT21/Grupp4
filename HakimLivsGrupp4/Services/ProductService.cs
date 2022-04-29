@@ -27,8 +27,9 @@ public class ProductService
         var products = await _context.Products
                 .Where(l =>
                 l.Name.Contains(search) ||
-                l.Brand.Contains(search) ||
-                l.Category.Contains(search))
+                l.Brand.Contains(search)
+                //||l.Category.Contains(search)
+                )
                 .ToListAsync();
         
         return products;
