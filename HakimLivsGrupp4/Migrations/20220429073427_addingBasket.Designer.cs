@@ -4,6 +4,7 @@ using HakimLivsGrupp4.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HakimLivsGrupp4.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220429073427_addingBasket")]
+    partial class addingBasket
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,25 +24,6 @@ namespace HakimLivsGrupp4.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("HakimLivsGrupp4.Models.Basket", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Total")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Basket");
-                });
-
             modelBuilder.Entity("HakimLivsGrupp4.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -48,9 +31,6 @@ namespace HakimLivsGrupp4.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("BasketId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Brand")
                         .IsRequired()
@@ -90,8 +70,6 @@ namespace HakimLivsGrupp4.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BasketId");
 
                     b.ToTable("Products");
                 });
@@ -298,13 +276,6 @@ namespace HakimLivsGrupp4.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("HakimLivsGrupp4.Models.Product", b =>
-                {
-                    b.HasOne("HakimLivsGrupp4.Models.Basket", null)
-                        .WithMany("ProductList")
-                        .HasForeignKey("BasketId");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -354,11 +325,6 @@ namespace HakimLivsGrupp4.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("HakimLivsGrupp4.Models.Basket", b =>
-                {
-                    b.Navigation("ProductList");
                 });
 #pragma warning restore 612, 618
         }
