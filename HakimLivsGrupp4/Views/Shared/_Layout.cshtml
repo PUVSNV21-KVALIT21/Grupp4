@@ -11,9 +11,6 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-
-
-            
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HakimLivsGrupp4</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -29,16 +26,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
-                    <div class="text-center">
-
-                    <form asp-controller="Home">
-                    <input type="text" name="searchString" />
-                    <input type="submit" value="Filter" />
-                    </form>
-                    
-                    </div>
                     <partial name="_LoginPartial" />
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="">Checkout</a>
                 </div>
             </div>
         </nav>

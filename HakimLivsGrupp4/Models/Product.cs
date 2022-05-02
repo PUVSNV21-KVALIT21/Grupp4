@@ -1,7 +1,4 @@
-﻿
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace HakimLivsGrupp4.Models
+﻿namespace HakimLivsGrupp4.Models
 {
     public class Product
     {
@@ -9,12 +6,10 @@ namespace HakimLivsGrupp4.Models
         public string Name { get; set; }
         public string Brand { get; set; }
         public string Description { get; set; }
-        public int Unit { get; set; }
-        public string UnitType { get; set; }
+        public int Weight { get; set; }
         public string TableOfContent { get; set; }
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal Price { get; set; }
-        public int CategoryID { get; set; }
+        public double Price { get; set; }
+        public string Category { get; set; }
         public int Stock { get; set; }
         public string ImgPath { get; set; }
     }

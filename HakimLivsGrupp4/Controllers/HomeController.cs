@@ -18,16 +18,9 @@ namespace HakimLivsGrupp4.Controllers
             _productService = productService;
         }
 
-        public async Task<IActionResult> IndexAsync(string searchString)
+        public async Task<IActionResult> IndexAsync()
         {
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                Products = await _productService.SearchProduct(searchString);
-            }
-            else
-            {
-                Products = await _productService.GetProducts();
-            }
+            Products = await _productService.GetProducts();
             return View(Products);
         }
 
