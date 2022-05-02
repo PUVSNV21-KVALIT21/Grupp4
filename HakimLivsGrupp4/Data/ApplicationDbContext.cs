@@ -13,5 +13,6 @@ namespace HakimLivsGrupp4.Data
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Basket> Basket { get; set; }
+        public DbSet<Categories> Categories { get; set; }
     }
 }

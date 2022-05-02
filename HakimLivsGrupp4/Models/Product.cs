@@ -14,7 +14,7 @@ namespace HakimLivsGrupp4.Models
         public string TableOfContent { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
-        public string Category { get; set; }
+        public int CategoryID { get; set; }
         public int Stock { get; set; }
         public string ImgPath { get; set; }
     }
