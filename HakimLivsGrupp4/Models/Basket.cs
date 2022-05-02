@@ -12,7 +12,7 @@ namespace HakimLivsGrupp4.Models
         public string DiscountID { get; set; }
 
         [Required]
-        public int UserID { get; set; }
+        public string UserID { get; set; }
         public IdentityUser User { get; set; }
     }
 }
