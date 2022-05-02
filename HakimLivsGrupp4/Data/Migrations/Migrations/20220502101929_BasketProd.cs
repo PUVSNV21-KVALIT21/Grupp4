@@ -4,7 +4,7 @@
 
 namespace HakimLivsGrupp4.Migrations
 {
-    public partial class UpdatedConnectionString : Migration
+    public partial class BasketProd : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
