@@ -7,8 +7,9 @@ namespace HakimLivsGrupp4.Models
     public class Basket
     {
         public int Id { get; set; }
-        public IEnumerable<Product>? ProductList { get; set; }
+        public IEnumerable<BasketProduct>? ProductList { get; set; }
         public string? Total { get; set; }
+        public string DiscountID { get; set; }
 
         [Required]
         public int UserID { get; set; }

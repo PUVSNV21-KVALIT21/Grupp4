@@ -30,15 +30,48 @@ namespace HakimLivsGrupp4.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("DiscountID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Total")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserID")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Basket");
+                });
+
+            modelBuilder.Entity("HakimLivsGrupp4.Models.BasketProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("BasketID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductQuantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BasketID");
+
+                    b.ToTable("BasketProducts");
                 });
 
             modelBuilder.Entity("HakimLivsGrupp4.Models.Product", b =>
@@ -48,9 +81,6 @@ namespace HakimLivsGrupp4.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("BasketId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Brand")
                         .IsRequired()
@@ -90,8 +120,6 @@ namespace HakimLivsGrupp4.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BasketId");
 
                     b.ToTable("Products");
                 });
@@ -298,11 +326,22 @@ namespace HakimLivsGrupp4.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("HakimLivsGrupp4.Models.Product", b =>
+            modelBuilder.Entity("HakimLivsGrupp4.Models.Basket", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HakimLivsGrupp4.Models.BasketProduct", b =>
                 {
                     b.HasOne("HakimLivsGrupp4.Models.Basket", null)
                         .WithMany("ProductList")
-                        .HasForeignKey("BasketId");
+                        .HasForeignKey("BasketID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

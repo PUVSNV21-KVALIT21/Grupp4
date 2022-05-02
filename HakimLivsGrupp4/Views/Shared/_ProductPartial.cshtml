@@ -22,6 +22,7 @@
                 @*<p class="card-text">@Html.DisplayFor(modelItem => item.Description).</p>*@
 
                 <a href="@Url.Action("AddProduct", "Product", new { area = "ProductService", product = item })" class="btn btn-primary">Köp</a>
+
             </div>
         </div>
     }
