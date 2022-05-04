@@ -150,5 +150,45 @@ namespace HakimLivsGrupp4.Controllers
         {
             return _context.Products.Any(e => e.Id == id);
         }
+
+        // POST: TestProducts/Create
+        [HttpPost, ActionName("LoadTestData")]
+        public async Task<ActionResult> LoadTestData()
+        {
+            try
+            {
+                if (!_context.Products.Any())
+                {
+                    string path = @"Data\BasProdukter1.csv";
+                    string[] lines = System.IO.File.ReadAllLines(path);
+                    foreach (string line in lines)
+                    {
+                        var values = line.Split(';');
+                        Product product = new Product();
+
+                        product.Name = values[0];
+                        product.Brand = values[1];
+                        product.Description = values[2];
+                        product.Unit = int.Parse(values[3]);
+                        product.UnitType = values[4];
+                        product.TableOfContent = values[5];
+                        product.Price = decimal.Parse(values[6]);
+                        product.CategoryID = int.Parse(values[7]);
+                        product.Stock = int.Parse(values[8]);
+                        product.ImgPath = values[9];
+                       
+                        _context.Products.Add(product);
+                    }
+                    await _context.SaveChangesAsync();
+                    return View(await _context.Products.ToListAsync());
+                }
+                return View(await _context.Products.ToListAsync());
+            }
+            catch
+            {
+                return View(await _context.Products.ToListAsync());
+            }
+        }
+
     }
 }

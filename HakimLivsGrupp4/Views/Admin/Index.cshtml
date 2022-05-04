@@ -6,9 +6,12 @@
 
 <h1>Admin</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<p><a asp-action="Create">Create New</a></p>
+
+<form asp-controller="Admin" method="post">
+    <input type="submit" value="Load SampleData" class="btn btn-primary" asp-action="LoadTestData" />
+</form>
+    
 <table class="table">
     <thead>
         <tr>
