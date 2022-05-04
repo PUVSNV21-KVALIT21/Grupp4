@@ -160,7 +160,8 @@ namespace HakimLivsGrupp4.Controllers
                 if (!_context.Products.Any())
                 {
                     string path = @"Data\BasProdukter1.csv";
-                    string[] lines = System.IO.File.ReadAllLines(path);
+                    string path2 = @"Data\BasKategorier1.csv";
+                    string[] lines = System.IO.File.ReadAllLines(path, System.Text.Encoding.Latin1);
                     foreach (string line in lines)
                     {
                         var values = line.Split(';');
@@ -179,6 +180,18 @@ namespace HakimLivsGrupp4.Controllers
                        
                         _context.Products.Add(product);
                     }
+
+                    string[] lines2 = System.IO.File.ReadAllLines(path2, System.Text.Encoding.Latin1);
+                    foreach (string line in lines2)
+                    {
+                        var values = line.Split(';');
+                        Category category = new Category();
+
+                        category.Name = values[0];
+
+                        _context.Categories.Add(category);
+                    }
+
                     await _context.SaveChangesAsync();
                     return View(await _context.Products.ToListAsync());
                 }
