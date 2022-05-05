@@ -2,9 +2,11 @@
 using HakimLivsGrupp4.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 using System.Linq;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
+using HakimLivsGrupp4.Controllers;
 
 namespace HakimLivsGrupp4.Services;
 
@@ -16,6 +18,7 @@ public class ProductService
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     private readonly ApplicationDbContext _context;
+    private readonly HomeController _homeController;
 
     public ProductService(ApplicationDbContext context, UserManager<IdentityUser> userManager, IHttpContextAccessor httpContextAccessor)
     {
