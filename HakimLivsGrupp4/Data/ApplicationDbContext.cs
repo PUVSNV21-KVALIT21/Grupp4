@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HakimLivsGrupp4.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -15,6 +15,6 @@ namespace HakimLivsGrupp4.Data
         public DbSet<Basket> Basket { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<BasketProduct> BasketProduct { get; set; }
-        
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
     }
 }

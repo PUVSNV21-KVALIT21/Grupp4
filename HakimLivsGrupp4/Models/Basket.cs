@@ -9,10 +9,9 @@ namespace HakimLivsGrupp4.Models
         public int Id { get; set; }
         public IEnumerable<BasketProduct>? ProductList { get; set; }
         public string? Total { get; set; }
-        public string DiscountID { get; set; }
+        public string? DiscountID { get; set; }
 
         [Required]
-        public string UserID { get; set; }
-        public IdentityUser User { get; set; }
+        public ApplicationUser User { get; set; }
     }
 }
