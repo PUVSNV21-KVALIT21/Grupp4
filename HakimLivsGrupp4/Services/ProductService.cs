@@ -11,13 +11,12 @@ namespace HakimLivsGrupp4.Services;
 public class ProductService
 {
     private IEnumerable<Product> products;
-    private Basket Basket;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     private readonly ApplicationDbContext _context;
 
-    public ProductService(ApplicationDbContext context, UserManager<IdentityUser> userManager, IHttpContextAccessor httpContextAccessor)
+    public ProductService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _userManager = userManager;
@@ -46,7 +45,7 @@ public class ProductService
     public async Task AddProduct(Product product)
     {
         var currentUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
-        var basket = _context.Basket.Where(x => x.UserID.ToString() == currentUser.Id).FirstOrDefault();
+        var basket = _context.Basket.Where(x => x.User.Id.ToString() == currentUser.Id).FirstOrDefault();
 
         if (basket.ProductList != null)
         {
