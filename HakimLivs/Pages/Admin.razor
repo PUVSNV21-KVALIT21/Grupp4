@@ -1,17 +1,43 @@
 ﻿@page "/admin"
-@using HakimLivs.Services
 @inject AdminService AdminService
+@inject ProductService ProductService
 
-<h3>Admin</h3>
 
 
-<button class="btn btn-primary" @onclick="LoadSampleData">Load sample data</button>
+<button class="btn btn-primary" @onclick="LoadSampleData">Ladda testdata</button>
+
+<button class="btn btn-primary" @onclick='(() => ShowStuff("ShowProducts"))'>Produkter</button>
+
+@if (showProducts)
+{
+    <AdminProduct ProductList="@ProductList" ></AdminProduct>
+}
+
+
+
 @code {
+    private List<Product> ProductList;
+
+    bool showProducts = false;
+
+    void ShowStuff(string text)
+    {
+        switch (text)
+        {
+            case "ShowProducts":
+                showProducts = !showProducts;
+                break;
+        }
+    }
 
     void LoadSampleData()
     {
         AdminService.LoadTestData();
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        ProductList = await ProductService.GetProducts();
+    }
 
 }
