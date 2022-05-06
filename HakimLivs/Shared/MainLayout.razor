@@ -6,14 +6,24 @@
 <PageTitle>Hakim Livs</PageTitle>
 
 <div class="page">
-    <div class="sidebar">
+    @*<div class="sidebar">
         <NavMenu />
-    </div>
+        </div>*@
 
     <main>
-        <div class="top-row px-4 auth">
-            <ShoppingCart></ShoppingCart>
-            <LoginDisplay />
+
+        <div class="d-flex justify-content-between align-items-center border-bottom">
+            <div class="p-2">
+                @*<a href="Pages/Index.razor"><img src="./Images/hakimlivs-logo.png" class=" oi-align-left" width="200" /></a>*@
+
+                <NavLink class="nav-link" href="/" ><img src="./Images/hakimlivs-logo.png" class=" oi-align-left" width="200" /></NavLink>
+
+            </div>
+            <div class="d-flex gap-3 p-2">
+                <ShoppingCart></ShoppingCart>
+                <LoginDisplay />
+            </div>
+
         </div>
         <article class="content px-4">
             @Body

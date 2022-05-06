@@ -1,25 +1,44 @@
 ﻿@page "/"
 @using HakimLivs.Models
-@inject CartState CartState
-@implements IDisposable
+@using HakimLivs.Services
+@inject ProductService ProductService
+@inject CategoryService CategoryService
+
+
 <PageTitle>Hakim Livs</PageTitle>
+<div class="d-flex justify-content-center mb-4">
 
-<h1>Välkommen!</h1>
+    <input type="text" @bind-value="@searchTerm" placeholder="Sök..." />
+    <input type="button" @onclick="@SearchProducts" value="Sök" />
 
-
-<Products ></Products>
-
+</div>
+<div class="d-flex">
+    <Categories CategoryList="@CategoryList" DisplayCategoryEvent="DisplayCategory"></Categories>
+    <Products searchTerm="@searchTerm" ProductList="@ProductList"></Products>
+</div>
 
 
 @code {
-    protected override void OnInitialized()
+    public List<Product> ProductList;
+    public List<Category> CategoryList;
+
+    public string searchTerm;
+
+    async Task SearchProducts()
     {
-        CartState.OnChange += StateHasChanged;
+        ProductList = await ProductService.SearchProduct(searchTerm);
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        ProductList = await ProductService.GetProducts();
+        CategoryList = await CategoryService.GetCategories();
     }
 
-    public void Dispose()
+    int catID = 0;
+
+    async Task DisplayCategory(int id)
     {
-        CartState.OnChange -= StateHasChanged;
+        ProductList = await ProductService.GetProductByCategory(id);
     }
 
 }

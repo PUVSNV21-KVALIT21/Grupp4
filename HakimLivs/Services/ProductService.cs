@@ -20,5 +20,28 @@ namespace HakimLivs.Services
             return products;
         }
 
+        public async Task<List<Product>> SearchProduct(string search)
+        {
+            var products = await _context.Products
+                    .Where(l =>
+                    l.Name.Contains(search) ||
+                    l.Brand.Contains(search)
+                    //||l.Category.Contains(search)
+                    )
+                    .ToListAsync();
+
+            return products;
+
+        }
+        public async Task<List<Product>> GetProductByCategory(int id)
+        {
+            var products = await _context.Products
+                    .Where(l => l.CategoryID == id)
+                    .ToListAsync();
+
+            return products;
+
+        }
+
     }
 }
