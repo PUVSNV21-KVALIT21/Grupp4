@@ -1,0 +1,61 @@
+﻿@using HakimLivs.Services
+@using HakimLivs.Models
+@inject CartState CartState
+@inject ProductService ProductService
+
+
+
+<div class="d-flex justify-content-center flex-wrap gap-2">
+
+    @if (products == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+
+        @foreach (var p in products)
+        {
+            <div class="card text-center" style="width: 15rem;">
+                <div class="card-body">
+                    <img src="@p.ImgPath" class="img" alt="@p.Name" width="200" height="200" style="object-fit:contain" />
+                    <p>@p.Price kr/st</p>
+                    <p class="card-title">
+                        @p.Name
+                    </p>
+                    <div class="mb-1">
+                        <span>@p.Brand</span> |
+                        <span>@p.Unit </span>
+                        <span>@p.UnitType</span>
+                    </div>
+                    
+                    <button @onclick="(() => AddToCart(p))" class="btn btn-primary">Lägg till i varukorg</button>
+
+                </div>
+            </div>
+        }
+    }
+</div>
+
+
+@code {
+    private List<Product> products;
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ProductService.GetProducts();
+    }
+    
+    protected override void OnInitialized()
+    {
+        CartState.OnChange += StateHasChanged;
+    }
+    public void AddToCart(Product p)
+    {
+        CartState.AddProduct(p);
+    }
+    public void Dispose()
+    {
+        CartState.OnChange -= StateHasChanged;
+    }
+
+}

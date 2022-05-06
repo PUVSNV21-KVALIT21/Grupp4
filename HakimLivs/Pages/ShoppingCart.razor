@@ -1,0 +1,33 @@
+﻿@using HakimLivs.Services
+@using HakimLivs.Models
+@inject ProductService ProductService
+@inject CartState CartState
+@implements IDisposable
+
+
+<div class="d-flex gap-3 border-1">
+
+<a>🛒</a>
+@if (CartState.selectedProduct != null && CartState.selectedProduct.Count() != 0)
+{
+    <span>@CartState.selectedProduct.Count() st </span>
+    
+    <span>@CartState.selectedProduct.Select(p=> p.Price).Sum() kr</span>
+}
+</div>
+
+
+
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        CartState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CartState.OnChange -= StateHasChanged;
+    }
+}

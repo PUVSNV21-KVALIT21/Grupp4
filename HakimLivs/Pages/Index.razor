@@ -1,0 +1,25 @@
+﻿@page "/"
+@using HakimLivs.Models
+@inject CartState CartState
+@implements IDisposable
+<PageTitle>Hakim Livs</PageTitle>
+
+<h1>Välkommen!</h1>
+
+
+<Products ></Products>
+
+
+
+@code {
+    protected override void OnInitialized()
+    {
+        CartState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CartState.OnChange -= StateHasChanged;
+    }
+
+}

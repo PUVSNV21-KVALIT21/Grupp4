@@ -1,0 +1,24 @@
+﻿@using HakimLivs.Models
+@using HakimLivs.Pages
+@inherits LayoutComponentBase
+
+
+<PageTitle>Hakim Livs</PageTitle>
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4 auth">
+            <ShoppingCart></ShoppingCart>
+            <LoginDisplay />
+        </div>
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+
