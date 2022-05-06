@@ -1,0 +1,17 @@
+﻿@page "/admin"
+@using HakimLivs.Services
+@inject AdminService AdminService
+
+<h3>Admin</h3>
+
+
+<button class="btn btn-primary" @onclick="LoadSampleData">Load sample data</button>
+@code {
+
+    void LoadSampleData()
+    {
+        AdminService.LoadTestData();
+    }
+
+
+}

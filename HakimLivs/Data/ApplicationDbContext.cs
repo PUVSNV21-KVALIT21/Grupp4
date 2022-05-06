@@ -12,7 +12,6 @@ namespace HakimLivs.Data
         }
 
         public DbSet<Product> Products { get; set; }
-
         public DbSet<Category> Categories { get; set; }
         public DbSet<BasketProduct> BasketProduct { get; set; }
     }
