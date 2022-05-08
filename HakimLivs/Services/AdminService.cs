@@ -12,7 +12,7 @@ namespace HakimLivs.Services
             _context = context;
         }
 
-        public async void LoadTestData()
+        public async Task LoadTestData()
         {
 
             var categoryList = new Category[] { 

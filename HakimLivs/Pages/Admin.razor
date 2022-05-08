@@ -30,9 +30,9 @@
         }
     }
 
-    void LoadSampleData()
+    async Task LoadSampleData()
     {
-        AdminService.LoadTestData();
+        await AdminService.LoadTestData();
     }
 
     protected override async Task OnInitializedAsync()

@@ -50,5 +50,11 @@ namespace HakimLivs.Services
 
         }
 
+        public async Task DeleteProduct(Product product)
+        {
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

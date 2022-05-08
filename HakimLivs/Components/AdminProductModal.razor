@@ -2,7 +2,7 @@
 @inject ProductService ProductService
     @inject NavigationManager NavigationManager;
 
-<Button Color="Color.Primary" Clicked="@ShowModal">Lägg till ny produkt</Button>
+<Button Color="Color.Primary" Clicked="@ShowModal" class="mt-2">Lägg till ny produkt</Button>
 
 <Modal @ref="modalRef">
     <ModalContent Centered>
@@ -119,6 +119,7 @@
     private Product productModel = new();
     //private Category categoryModel = new Category { };
     private List<Category> Categories { get; set; } = new List<Category>();
+    private Modal modalRef;
 
     //private int hehe;
     //private void HandleValidSubmit()
@@ -132,7 +133,8 @@
         Categories = await CategoryService.GetCategories();
     }
 
-    private Modal modalRef;
+    [Parameter]
+    public EventCallback UpdateProductListEvent { get; set; }
 
     private Task ShowModal()
     {
@@ -142,6 +144,7 @@
     private async Task SaveProduct()
     {
         await ProductService.SaveProduct(productModel);
+        await UpdateProductListEvent.InvokeAsync();
         await HideModal();
     }
     private Task HideModal()

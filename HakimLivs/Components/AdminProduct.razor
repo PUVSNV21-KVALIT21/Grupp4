@@ -1,10 +1,10 @@
 ﻿@using HakimLivs.Models
 @using HakimLivs.Services
-
+@inject ProductService ProductService
 
 
 <div >
-<AdminProductModal></AdminProductModal>
+<AdminProductModal UpdateProductListEvent="UpdateProductList"></AdminProductModal>
 
 
     @if (ProductList == null)
@@ -42,8 +42,8 @@
                         <td>@p.Category.Name</td>
                         <td>@p.Stock</td>
                         <td class="text-truncate" style="max-width: 150px;">@p.ImgPath</td>
-                    </tr>
-                    
+                        <td><button class="btn btn-danger" @onclick="(() => DeleteProduct(p))">Ta bort</button></td>
+                    </tr>                    
         }
                 </tbody>
             </table>
@@ -54,8 +54,16 @@
 @code {
     [Parameter]
     public List<Product> ProductList { get; set; }
-    
 
+    async Task DeleteProduct(Product product)
+    {
+        await ProductService.DeleteProduct(product);
+        await UpdateProductList();
+    }
     
+    async Task UpdateProductList()
+    {
+        ProductList = await ProductService.GetProducts();
+    }
 
 }
