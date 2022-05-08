@@ -7,19 +7,86 @@
 
 <div class="d-flex gap-3 border-1">
 
-<a>🛒</a>
-@if (CartState.selectedProduct != null && CartState.selectedProduct.Count() != 0)
-{
-    <span>@CartState.selectedProduct.Count() st </span>
-    
-    <span>@CartState.selectedProduct.Select(p=> p.Price).Sum() kr</span>
-}
+
+    <Button Color="Color.Primary" Clicked="@ShowModal">Varukorg <span>@CartState.totalPrice kr</span></Button>
+
+
+    <Modal @bind-Visible="@modalVisible">
+        <ModalContent  >
+            <ModalHeader>
+                <ModalTitle>Varukorg</ModalTitle>
+                <CloseButton />
+            </ModalHeader>
+
+            <ModalBody>
+                <div>
+                    @foreach (var p in CartState.selectedProducts)
+                    {
+                        <div class="d-flex justify-content-between m-2">
+
+                            <span>
+                                @p.Product.Name
+
+                            </span>
+                            <span>
+                                <button class="btn btn-primary" @onclick="(() => SubtractProductQuantity(p))">-</button>
+
+                                @p.ProductQuantity
+
+                                <button class="btn btn-primary" @onclick="(() => AddProductQuantity(p))">+</button>
+                            </span>
+                        </div>
+                    }
+                </div>
+                @*TODO:
+                    Move inline CSS
+                *@
+                <p style="text-align:right; font-weight:bold;">@CartState.totalPrice kr</p>
+            </ModalBody>
+
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="@HideModal">Stäng</Button>
+                <Button Color="Color.Primary" Clicked="@HideModal">Till kassan</Button>
+            </ModalFooter>
+        </ModalContent>
+    </Modal>
+
+
 </div>
 
 
 
 
 @code {
+    [Parameter]
+    public List<Product> ProductList { get; set; }
+
+
+    private bool modalVisible;
+
+    private void AddProductQuantity(BasketProduct basketProduct)
+    {
+        CartState.AddProductQuantity(basketProduct);
+    }
+
+    private void SubtractProductQuantity(BasketProduct basketProduct)
+    {
+        CartState.SubtractProductQuantity(basketProduct);
+    }
+
+    private Task ShowModal()
+    {
+        modalVisible = true;
+
+        return Task.CompletedTask;
+    }
+
+    private Task HideModal()
+    {
+        modalVisible = false;
+
+        return Task.CompletedTask;
+    }
 
     protected override void OnInitialized()
     {
