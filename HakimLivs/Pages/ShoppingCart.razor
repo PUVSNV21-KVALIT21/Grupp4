@@ -1,5 +1,7 @@
 ﻿@using HakimLivs.Services
 @using HakimLivs.Models
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage ProtectedLocalStorage
 @inject ProductService ProductService
 @inject CartState CartState
 @implements IDisposable
@@ -7,12 +9,15 @@
 
 <div class="d-flex gap-3 border-1">
 
+    @if (CartState.selectedProducts.Count != 0)
+    {
 
-    <Button Color="Color.Primary" Clicked="@ShowModal">Varukorg <span>@CartState.totalPrice kr</span></Button>
+        <Button Color="Color.Primary" Clicked="@ShowModal">Varukorg <span>@CartState.totalPrice kr</span></Button>
+    }
 
 
     <Modal @bind-Visible="@modalVisible">
-        <ModalContent  >
+        <ModalContent>
             <ModalHeader>
                 <ModalTitle>Varukorg</ModalTitle>
                 <CloseButton />
@@ -20,33 +25,42 @@
 
             <ModalBody>
                 <div>
-                    @foreach (var p in CartState.selectedProducts)
+                    @if (CartState.selectedProducts.Count == 0 || CartState.selectedProducts == null)
                     {
-                        <div class="d-flex justify-content-between m-2">
-
-                            <span>
-                                @p.Product.Name
-
-                            </span>
-                            <span>
-                                <button class="btn btn-primary" @onclick="(() => SubtractProductQuantity(p))">-</button>
-
-                                @p.ProductQuantity
-
-                                <button class="btn btn-primary" @onclick="(() => AddProductQuantity(p))">+</button>
-                            </span>
-                        </div>
+                        <span>Här var det tomt!</span>
                     }
+                    else
+                    {
+
+                        @foreach (var p in CartState.selectedProducts)
+                        {
+                            <div class="d-flex justify-content-between m-2">
+
+                                <span>
+                                    @p.Product.Name
+
+                                </span>
+                                <span>
+                                    <button class="btn btn-primary" @onclick="(() => SubtractProductQuantity(p))">-</button>
+
+                                    @p.ProductQuantity
+
+                                    <button class="btn btn-primary" @onclick="(() => AddProductQuantity(p))">+</button>
+                                </span>
+                            </div>
+
+                        }
+                        <p style="text-align:right; font-weight:bold;">@CartState.totalPrice kr</p>
+                    }
+
                 </div>
-                @*TODO:
-                    Move inline CSS
-                *@
-                <p style="text-align:right; font-weight:bold;">@CartState.totalPrice kr</p>
+
             </ModalBody>
 
             <ModalFooter>
                 <Button Color="Color.Secondary" Clicked="@HideModal">Stäng</Button>
-                <Button Color="Color.Primary" Clicked="@HideModal">Till kassan</Button>
+                <Button Color="Color.Primary" Clicked="@HideModal"><NavLink style="color:white" href="/checkout">Till kassan</NavLink></Button>
+
             </ModalFooter>
         </ModalContent>
     </Modal>
@@ -64,14 +78,18 @@
 
     private bool modalVisible;
 
-    private void AddProductQuantity(BasketProduct basketProduct)
+    private async Task AddProductQuantity(BasketProduct basketProduct)
     {
         CartState.AddProductQuantity(basketProduct);
+        await ProtectedLocalStorage.SetAsync("product", CartState.selectedProducts);
+
     }
 
-    private void SubtractProductQuantity(BasketProduct basketProduct)
+    private async Task SubtractProductQuantity(BasketProduct basketProduct)
     {
         CartState.SubtractProductQuantity(basketProduct);
+        await ProtectedLocalStorage.SetAsync("product", CartState.selectedProducts);
+
     }
 
     private Task ShowModal()

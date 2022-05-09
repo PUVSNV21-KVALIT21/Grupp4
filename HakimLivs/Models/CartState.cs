@@ -1,14 +1,17 @@
-﻿namespace HakimLivs.Models
+﻿
+
+namespace HakimLivs.Models
+
 {
     public class CartState
     {
+       
         public List<BasketProduct>? selectedProducts = new List<BasketProduct>();
 
         public decimal? totalPrice { get; set; } = 0;
-
         public event Action OnChange;
-      
-        public void AddProduct(Product product)
+
+        public async Task AddProduct(Product product)
         {
             BasketProduct basketProduct = new BasketProduct();
 
@@ -23,13 +26,14 @@
                 isAlreadyInBasket.Product = product;
                 isAlreadyInBasket.ProductQuantity = 1;
                 selectedProducts.Add(isAlreadyInBasket);
-
             }
 
             totalPrice = totalPrice + product.Price;
-
+            
             NotifyStateChanged();
         }
+
+       
 
         public void AddProductQuantity(BasketProduct basketProduct)
         {
@@ -52,13 +56,19 @@
             }
             else
             {
+                totalPrice = totalPrice - selectedProducts[product].Product.Price;
+
                 selectedProducts.Remove(selectedProducts[product]);
             }
 
             NotifyStateChanged();
         }
 
-
+        public void ClearCart()
+        {
+            selectedProducts.Clear();
+            totalPrice = 0;
+        }
 
         private void NotifyStateChanged() => OnChange?.Invoke();
 

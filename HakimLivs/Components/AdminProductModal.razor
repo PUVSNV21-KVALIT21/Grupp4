@@ -1,17 +1,17 @@
 ﻿@inject CategoryService CategoryService
 @inject ProductService ProductService
-    @inject NavigationManager NavigationManager;
+@inject NavigationManager NavigationManager;
 
 <Button Color="Color.Primary" Clicked="@ShowModal" class="mt-2">Lägg till ny produkt</Button>
 
 <Modal @ref="modalRef">
     <ModalContent Centered>
+            <EditForm Model="@productModel" OnSubmit="@SaveProduct">
         <ModalHeader>
             <ModalTitle>Lägg till ny produkt</ModalTitle>
             <CloseButton />
         </ModalHeader>
         <ModalBody>
-            <EditForm  Model="@productModel" OnSubmit="@SaveProduct" >
                 <label class="form-label" for="name">Namn</label>
                 <InputText class="form-control" id="name" @bind-Value="productModel.Name" />
 
@@ -36,10 +36,10 @@
                 <label class="form-label" for="category">Kategori</label>
                 <InputSelect class="form-control" id="category" @bind-Value="productModel.CategoryID">
                     <SelectItem Value="0" Disabled>Välj kategori</SelectItem>
-                @foreach (var cat in Categories)
-                {
-                <option value="@cat.Id">@cat.Name</option>
-                }
+                    @foreach (var cat in Categories)
+                    {
+                        <option value="@cat.Id">@cat.Name</option>
+                    }
                 </InputSelect>
 
                 <label class="form-label" for="stock">Lagersaldo</label>
@@ -47,71 +47,72 @@
 
                 <label class="form-label" for="imgPath">Bildsökväg</label>
                 <InputText class="form-control" id="imgPath" @bind-Value="productModel.ImgPath" />
-                @*<button type="submit">Submit</button>*@
-                </EditForm>
-           @* <Field>
+
+            @* <Field>
                 <FieldLabel>Produktnamn</FieldLabel>
                 <TextEdit @bind-Text="@productModel.Name" Placeholder="Produktnamn..." />
-            </Field>
-            <Field>
+                </Field>
+                <Field>
                 <FieldLabel>Märke/tillverkare</FieldLabel>
                 <TextEdit @bind-Text="@productModel.Brand" Placeholder="Märke/tillverkare..." />
-            </Field>
-            <Field>
+                </Field>
+                <Field>
                 <FieldLabel>Beskrivning</FieldLabel>
                 <TextEdit @bind-Text="@productModel.Description" Placeholder="Beskrivning..." />
-            </Field>
-            <Field>
+                </Field>
+                <Field>
                 <FieldLabel>Hur många/mkt</FieldLabel>
                 <NumericEdit @bind-Value="@productModel.Unit" Min="1"></NumericEdit>
-            </Field>
-            <Field>
+                </Field>
+                <Field>
                 <FieldLabel>Enhetstyp</FieldLabel>
                 <TextEdit @bind-Text="@productModel.UnitType" Placeholder="g/kg/ml/cl..." />
-            </Field>
-            <Field>
+                </Field>
+                <Field>
                 <FieldLabel>Innehållsförteckning</FieldLabel>
                 <TextEdit @bind-Text="@productModel.TableOfContent" Placeholder="Innehållsförteckning..." />
-            </Field>
-            <Field>
+                </Field>
+                <Field>
                 <FieldLabel>Pris</FieldLabel>
                 <NumericEdit @bind-Value="@productModel.Price" Min="1"></NumericEdit>
-            </Field>
-            <FieldLabel>Kategori</FieldLabel>
-            <Select TValue="int" @bind-SelectedValue="productModel.CategoryID">
+                </Field>
+                <FieldLabel>Kategori</FieldLabel>
+                <Select TValue="int" @bind-SelectedValue="productModel.CategoryID">
                 <SelectItem Value="0">Välj kategori</SelectItem>
 
                 @foreach (var cat in Categories)
-                            {
+                {
                 <SelectItem Value="cat.Id">@cat.Name</SelectItem>
 
-                            }
-            </Select>
-            <Field>
+                }
+                </Select>
+                <Field>
                 <FieldLabel>Lagersaldo</FieldLabel>
                 <NumericEdit @bind-Value="@productModel.Stock" Min="1"></NumericEdit>
-            </Field>
-            <Field>
+                </Field>
+                <Field>
                 <FieldLabel>Bildsökväg</FieldLabel>
                 <TextEdit @bind-Text="@productModel.ImgPath" Placeholder="Bildsökväg..." />
-            </Field>
+                </Field>
 
-            <p>@productModel.Name</p>
-            <p>@productModel.Brand</p>
-            <p>@productModel.Description</p>
-            <p>@productModel.Unit</p>
-            <p>@productModel.UnitType</p>
-            <p>@productModel.TableOfContent</p>
-            <p>@productModel.Price</p>
-            <p>@productModel.CategoryID</p>
-            <p>@productModel.Stock</p>
-            <p>@productModel.ImgPath</p>*@
+                <p>@productModel.Name</p>
+                <p>@productModel.Brand</p>
+                <p>@productModel.Description</p>
+                <p>@productModel.Unit</p>
+                <p>@productModel.UnitType</p>
+                <p>@productModel.TableOfContent</p>
+                <p>@productModel.Price</p>
+                <p>@productModel.CategoryID</p>
+                <p>@productModel.Stock</p>
+                <p>@productModel.ImgPath</p>*@
 
         </ModalBody>
         <ModalFooter>
-            <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
-            <Button Color="Color.Primary" Clicked="@SaveProduct">Save Changes</Button>
+            <Button Color="Color.Secondary" Clicked="@HideModal">Stäng</Button>
+            <Button Color="Color.Primary" Type="ButtonType.Submit">Spara</Button>
         </ModalFooter>
+            </EditForm>
+
     </ModalContent>
 </Modal>
 
@@ -146,10 +147,13 @@
         await ProductService.SaveProduct(productModel);
         await UpdateProductListEvent.InvokeAsync();
         await HideModal();
+        productModel = new();
     }
     private Task HideModal()
     {
         //ProductService.SaveProduct(productModel);
+        productModel = new();
+
         return modalRef.Hide();
 
     }
