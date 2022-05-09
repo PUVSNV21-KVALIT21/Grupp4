@@ -35,7 +35,7 @@
 
                 <label class="form-label" for="category">Kategori</label>
                 <InputSelect class="form-control" id="category" @bind-Value="productModel.CategoryID">
-                    <SelectItem Value="0">Välj kategori</SelectItem>
+                    <SelectItem Value="0" Disabled>Välj kategori</SelectItem>
                 @foreach (var cat in Categories)
                 {
                 <option value="@cat.Id">@cat.Name</option>
