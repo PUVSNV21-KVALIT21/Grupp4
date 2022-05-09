@@ -6,7 +6,7 @@
 
 <Modal @ref="modalRef">
     <ModalContent Centered>
-            <EditForm Model="@productModel" OnSubmit="@SaveProduct">
+            <EditForm Model="@productModel" OnValidSubmit="@SaveProduct">
         <ModalHeader>
             <ModalTitle>Lägg till ny produkt</ModalTitle>
             <CloseButton />
@@ -118,16 +118,8 @@
 
 @code {
     private Product productModel = new();
-    //private Category categoryModel = new Category { };
     private List<Category> Categories { get; set; } = new List<Category>();
-    private Modal modalRef;
-
-    //private int hehe;
-    //private void HandleValidSubmit()
-    //{
-    //    ProductService.SaveProduct(productModel);
-    //}
-
+    private Modal modalRef;    
 
     protected async override Task OnInitializedAsync()
     {
@@ -151,7 +143,6 @@
     }
     private Task HideModal()
     {
-        //ProductService.SaveProduct(productModel);
         productModel = new();
 
         return modalRef.Hide();
