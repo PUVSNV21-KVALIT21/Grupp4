@@ -1,0 +1,43 @@
+﻿@page "/admin"
+@inject AdminService AdminService
+@inject ProductService ProductService
+
+
+
+<button class="btn btn-primary" @onclick="LoadSampleData">Ladda testdata</button>
+
+<button class="btn btn-primary" @onclick='(() => ShowStuff("ShowProducts"))'>Produkter</button>
+
+@if (showProducts)
+{
+    <AdminProduct ProductList="@ProductList" ></AdminProduct>
+}
+
+
+
+@code {
+    private List<Product> ProductList;
+
+    bool showProducts = false;
+
+    void ShowStuff(string text)
+    {
+        switch (text)
+        {
+            case "ShowProducts":
+                showProducts = !showProducts;
+                break;
+        }
+    }
+
+    async Task LoadSampleData()
+    {
+        await AdminService.LoadTestData();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ProductList = await ProductService.GetProducts();
+    }
+
+}

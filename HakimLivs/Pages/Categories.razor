@@ -1,0 +1,28 @@
+﻿@using HakimLivs.Models
+
+<ul>
+
+    @if (CategoryList == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        @foreach (var cat in CategoryList)
+        {
+            <li class="mb-2">
+
+            <button class="btn btn-secondary" @onclick="@(() => DisplayCategoryEvent.InvokeAsync(cat.Id))">@cat.Name</button>
+            </li>
+        }
+    }
+
+</ul>
+@code {
+    [Parameter]
+    public List<Category> CategoryList { get; set; }
+
+    [Parameter]
+    public EventCallback<int> DisplayCategoryEvent { get; set; }
+    
+}

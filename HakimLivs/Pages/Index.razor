@@ -1,0 +1,45 @@
+﻿@page "/"
+@using HakimLivs.Models
+@using HakimLivs.Services
+@inject ProductService ProductService
+@inject CategoryService CategoryService
+
+
+<PageTitle>Hakim Livs</PageTitle>
+
+<div class="d-flex justify-content-center mb-4">
+
+    <input type="text" @bind-value="@searchTerm" placeholder="Sök..." />
+    <input type="button" @onclick="@SearchProducts" value="Sök" />
+
+</div>
+<div class="d-flex">
+    <Categories CategoryList="@CategoryList" DisplayCategoryEvent="DisplayCategory"></Categories>
+    <Products searchTerm="@searchTerm" ProductList="@ProductList"></Products>
+</div>
+
+
+@code {
+    public List<Product> ProductList;
+    public List<Category> CategoryList;
+
+    public string searchTerm;
+
+    async Task SearchProducts()
+    {
+        ProductList = await ProductService.SearchProduct(searchTerm);
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        ProductList = await ProductService.GetProducts();
+        CategoryList = await CategoryService.GetCategories();
+    }
+
+    int catID = 0;
+
+    async Task DisplayCategory(int id)
+    {
+        ProductList = await ProductService.GetProductByCategory(id);
+    }
+
+}

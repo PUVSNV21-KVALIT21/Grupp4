@@ -1,0 +1,156 @@
+﻿@inject CategoryService CategoryService
+@inject ProductService ProductService
+    @inject NavigationManager NavigationManager;
+
+<Button Color="Color.Primary" Clicked="@ShowModal" class="mt-2">Lägg till ny produkt</Button>
+
+<Modal @ref="modalRef">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Lägg till ny produkt</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <EditForm  Model="@productModel" OnSubmit="@SaveProduct" >
+                <label class="form-label" for="name">Namn</label>
+                <InputText class="form-control" id="name" @bind-Value="productModel.Name" />
+
+                <label class="form-label" for="brand">Märke/tillverkare</label>
+                <InputText class="form-control" id="brand" @bind-Value="productModel.Brand" />
+
+                <label class="form-label" for="desc">Beskrivning</label>
+                <InputText class="form-control" id="desc" @bind-Value="productModel.Description" />
+
+                <label class="form-label" for="unit">Enhet</label>
+                <InputNumber class="form-control" id="unit" @bind-Value="productModel.Unit" />
+
+                <label class="form-label" for="unitType">Enhetstyp</label>
+                <InputText class="form-control" id="uniType" @bind-Value="productModel.UnitType" />
+
+                <label class="form-label" for="ToC">Innehållsförteckning</label>
+                <InputText class="form-control" id="ToC" @bind-Value="productModel.TableOfContent" />
+
+                <label class="form-label" for="price">Pris</label>
+                <InputNumber class="form-control" id="price" @bind-Value="productModel.Price" />
+
+                <label class="form-label" for="category">Kategori</label>
+                <InputSelect class="form-control" id="category" @bind-Value="productModel.CategoryID">
+                    <SelectItem Value="0" Disabled>Välj kategori</SelectItem>
+                @foreach (var cat in Categories)
+                {
+                <option value="@cat.Id">@cat.Name</option>
+                }
+                </InputSelect>
+
+                <label class="form-label" for="stock">Lagersaldo</label>
+                <InputNumber class="form-control" id="stock" @bind-Value="productModel.Stock" />
+
+                <label class="form-label" for="imgPath">Bildsökväg</label>
+                <InputText class="form-control" id="imgPath" @bind-Value="productModel.ImgPath" />
+                @*<button type="submit">Submit</button>*@
+                </EditForm>
+           @* <Field>
+                <FieldLabel>Produktnamn</FieldLabel>
+                <TextEdit @bind-Text="@productModel.Name" Placeholder="Produktnamn..." />
+            </Field>
+            <Field>
+                <FieldLabel>Märke/tillverkare</FieldLabel>
+                <TextEdit @bind-Text="@productModel.Brand" Placeholder="Märke/tillverkare..." />
+            </Field>
+            <Field>
+                <FieldLabel>Beskrivning</FieldLabel>
+                <TextEdit @bind-Text="@productModel.Description" Placeholder="Beskrivning..." />
+            </Field>
+            <Field>
+                <FieldLabel>Hur många/mkt</FieldLabel>
+                <NumericEdit @bind-Value="@productModel.Unit" Min="1"></NumericEdit>
+            </Field>
+            <Field>
+                <FieldLabel>Enhetstyp</FieldLabel>
+                <TextEdit @bind-Text="@productModel.UnitType" Placeholder="g/kg/ml/cl..." />
+            </Field>
+            <Field>
+                <FieldLabel>Innehållsförteckning</FieldLabel>
+                <TextEdit @bind-Text="@productModel.TableOfContent" Placeholder="Innehållsförteckning..." />
+            </Field>
+            <Field>
+                <FieldLabel>Pris</FieldLabel>
+                <NumericEdit @bind-Value="@productModel.Price" Min="1"></NumericEdit>
+            </Field>
+            <FieldLabel>Kategori</FieldLabel>
+            <Select TValue="int" @bind-SelectedValue="productModel.CategoryID">
+                <SelectItem Value="0">Välj kategori</SelectItem>
+
+                @foreach (var cat in Categories)
+                            {
+                <SelectItem Value="cat.Id">@cat.Name</SelectItem>
+
+                            }
+            </Select>
+            <Field>
+                <FieldLabel>Lagersaldo</FieldLabel>
+                <NumericEdit @bind-Value="@productModel.Stock" Min="1"></NumericEdit>
+            </Field>
+            <Field>
+                <FieldLabel>Bildsökväg</FieldLabel>
+                <TextEdit @bind-Text="@productModel.ImgPath" Placeholder="Bildsökväg..." />
+            </Field>
+
+            <p>@productModel.Name</p>
+            <p>@productModel.Brand</p>
+            <p>@productModel.Description</p>
+            <p>@productModel.Unit</p>
+            <p>@productModel.UnitType</p>
+            <p>@productModel.TableOfContent</p>
+            <p>@productModel.Price</p>
+            <p>@productModel.CategoryID</p>
+            <p>@productModel.Stock</p>
+            <p>@productModel.ImgPath</p>*@
+
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
+            <Button Color="Color.Primary" Clicked="@SaveProduct">Save Changes</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    private Product productModel = new();
+    //private Category categoryModel = new Category { };
+    private List<Category> Categories { get; set; } = new List<Category>();
+    private Modal modalRef;
+
+    //private int hehe;
+    //private void HandleValidSubmit()
+    //{
+    //    ProductService.SaveProduct(productModel);
+    //}
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        Categories = await CategoryService.GetCategories();
+    }
+
+    [Parameter]
+    public EventCallback UpdateProductListEvent { get; set; }
+
+    private Task ShowModal()
+    {
+        return modalRef.Show();
+    }
+
+    private async Task SaveProduct()
+    {
+        await ProductService.SaveProduct(productModel);
+        await UpdateProductListEvent.InvokeAsync();
+        await HideModal();
+    }
+    private Task HideModal()
+    {
+        //ProductService.SaveProduct(productModel);
+        return modalRef.Hide();
+
+    }
+}
