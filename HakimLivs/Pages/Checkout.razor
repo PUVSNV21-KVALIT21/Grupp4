@@ -1,0 +1,158 @@
+﻿@page "/checkout"
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage ProtectedLocalStorage
+@inject CartState CartState
+@implements IDisposable
+
+<h3>Kassa</h3>
+
+
+<h4>Varor:</h4>
+<div>
+    @foreach (var p in CartState.selectedProducts)
+    {
+        <div class="d-flex justify-content-between m-2">
+
+            <span>
+                @p.Product.Name
+
+            </span>
+            <span>
+                <button class="btn btn-primary" @onclick="(() => SubtractProductQuantity(p))">-</button>
+
+                @p.ProductQuantity
+
+                <button class="btn btn-primary" @onclick="(() => AddProductQuantity(p))">+</button>
+            </span>
+        </div>
+    }
+</div>
+
+<strong>@CartState.totalPrice kr</strong>
+
+<RadioGroup TValue="string" Name="colors" @bind-CheckedValue="@checkedValue">
+    <Radio Value="@("invoice")">Faktura</Radio>
+    <Radio Value="@("creditcard")">VISA/Mastercard</Radio>
+</RadioGroup>
+
+
+
+
+<AuthorizeView>
+    <Authorized>
+        <Button Color="Color.Primary" Clicked="@ShowModal">Beställ</Button>
+    </Authorized>
+    <NotAuthorized>
+        <Button Color="Color.Primary" Clicked="@ShowModal" Disabled>Beställ</Button>
+        <p>Du måste vara inloggad för att kunna beställa</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
+@*Display data from local storage*@
+
+@*@foreach (var p in testp)
+    {
+
+    <h4>@p.Product.Name</h4>
+    <p>@p.ProductQuantity</p>
+    }*@
+
+<Modal @bind-Visible="@modalVisible">
+    <ModalContent>
+        <ModalHeader>
+            <ModalTitle>Kvitto</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+
+        <ModalBody>
+            <h4>
+                Tack för din beställning
+
+            </h4>
+
+            @if (checkedValue == "invoice")
+            {
+                <p>Vi skickar en faktura på @CartState.totalPrice kr till dig</p>
+            }
+
+            @if (checkedValue == "creditcard")
+            {
+                <p>Vi har debiterat @CartState.totalPrice kr från ditt kort </p>
+            }
+
+
+        </ModalBody>
+
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@HideModal">Stäng</Button>
+            <Button Color="Color.Primary" Clicked="@HideModal"><NavLink style="color:white" href="/">Handla mer</NavLink></Button>
+
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+
+
+
+@code {
+    private string checkedValue = "invoice";
+
+    private bool orderButtonDisabled = false;
+
+    private bool modalVisible;
+    private List<BasketProduct> testp = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await ProtectedLocalStorage.GetAsync<List<BasketProduct>>("product");
+        testp = result.Success ? result.Value.ToList() : null;
+    }
+
+
+    private Task ShowModal()
+    {
+        modalVisible = true;
+
+        return Task.CompletedTask;
+    }
+
+    private Task HideModal()
+    {
+        modalVisible = false;
+        ClearCart();
+        return Task.CompletedTask;
+    }
+
+    private void ClearCart()
+    {
+        CartState.ClearCart();
+    }
+
+    private async Task AddProductQuantity(BasketProduct basketProduct)
+    {
+        CartState.AddProductQuantity(basketProduct);
+        await ProtectedLocalStorage.SetAsync("product", CartState.selectedProducts);
+
+    }
+
+    private async Task SubtractProductQuantity(BasketProduct basketProduct)
+    {
+        CartState.SubtractProductQuantity(basketProduct);
+        await ProtectedLocalStorage.SetAsync("product", CartState.selectedProducts);
+
+    }
+
+
+    protected override void OnInitialized()
+    {
+        CartState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CartState.OnChange -= StateHasChanged;
+    }
+
+}

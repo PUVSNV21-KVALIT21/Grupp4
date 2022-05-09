@@ -1,5 +1,7 @@
 ﻿@using HakimLivs.Services
 @using HakimLivs.Models
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage ProtectedLocalStorage
 @inject CartState CartState
 @inject ProductService ProductService
 
@@ -59,13 +61,18 @@
     //    ProductList = await ProductService.GetProducts();
     //}
 
+
+
+
     protected override void OnInitialized()
     {
         CartState.OnChange += StateHasChanged;
     }
-    public void AddToCart(Product p)
+    public async Task AddToCart(Product p)
     {
         CartState.AddProduct(p);
+        await ProtectedLocalStorage.SetAsync("product", CartState.selectedProducts);
+
     }
     public void Dispose()
     {
