@@ -32,7 +32,7 @@ namespace HakimLivs.Services
 
             return products;
 
-        }
+        }        
         public async Task<List<Product>> GetProductByCategory(int id)
         {
             var products = await _context.Products

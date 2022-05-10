@@ -8,9 +8,58 @@
 <PageTitle>Hakim Livs</PageTitle>
 
 <div class="d-flex justify-content-center mb-4">
+    <div>
+        <div class="m-2">
+            <EditForm Model="@searchTerm" OnValidSubmit="@SearchProducts">
+                <InputText @bind-Value="searchTerm" placeholder="Sök..."></InputText>
+                <input type="button" value="Sök" />
+            </EditForm>
+        </div>
+        <div class="d-flex gap-1 m-2">
+            <Dropdown>
+                <DropdownToggle Color="Color.Primary">
+                    Sortera
+                </DropdownToggle>
+                <DropdownMenu>
+                    <DropdownItem @onclick='(() => SortProduct("highestPrice"))'>
+                        Högsta pris
+                    </DropdownItem>
+                    <DropdownDivider />
+                    <DropdownItem @onclick='(() => SortProduct("lowestPrice"))'>
+                        Lägsta pris
+                    </DropdownItem>
+                    <DropdownDivider />
+                    <DropdownItem @onclick='(() => SortProduct("stock"))'>
+                        Lagersaldo
+                    </DropdownItem>
+                </DropdownMenu>
+            </Dropdown>
 
-    <input type="text" @bind-value="@searchTerm" placeholder="Sök..." />
-    <input type="button" @onclick="@SearchProducts" value="Sök" />
+            <Dropdown>
+                <DropdownToggle Color="Color.Primary">
+                    Filtrera
+                </DropdownToggle>
+                <DropdownMenu>
+                    <DropdownItem>
+                        EJ IMPLEMENTERAD ÄN ⚠️
+                    </DropdownItem>
+                    <DropdownDivider />
+                    <DropdownItem>
+                        Eko
+                    </DropdownItem>
+                    <DropdownDivider />
+                    <DropdownItem>
+                        Glutenfritt
+                    </DropdownItem>
+                    <DropdownDivider />
+                    <DropdownItem>
+                        Vekanskt
+                    </DropdownItem>
+                </DropdownMenu>
+            </Dropdown>
+        </div>
+
+    </div>
 
 </div>
 <div class="d-flex">
@@ -23,11 +72,30 @@
     public List<Product> ProductList;
     public List<Category> CategoryList;
 
-    public string searchTerm;
+    public string searchTerm = "";
 
     async Task SearchProducts()
     {
         ProductList = await ProductService.SearchProduct(searchTerm);
+    }
+
+    void SortProduct(string sortBy)
+    {
+
+        switch (sortBy)
+        {
+            case "highestPrice":
+                ProductList = ProductList.OrderByDescending(p => p.Price).ToList();
+                break;
+            case "lowestPrice":
+                ProductList = ProductList.OrderBy(p => p.Price).ToList();
+                break;
+            case "stock":
+                ProductList = ProductList.OrderByDescending(p => p.Stock).ToList();
+                break;
+        }
+
+
     }
     protected override async Task OnInitializedAsync()
     {
@@ -35,7 +103,6 @@
         CategoryList = await CategoryService.GetCategories();
     }
 
-    int catID = 0;
 
     async Task DisplayCategory(int id)
     {
