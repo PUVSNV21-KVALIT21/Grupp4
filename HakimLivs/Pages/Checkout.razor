@@ -104,9 +104,12 @@
         return Task.CompletedTask;
     }
 
-    private void ClearCart()
+    private async Task ClearCart()
     {
-        CartState.ClearCart();
+        await CartState.ClearCart();
+        await ProtectedLocalStorage.DeleteAsync("productsInCart");
+        await ProtectedLocalStorage.DeleteAsync("totalPrice");
+
     }
 
     private async Task AddProductQuantity(BasketProduct basketProduct)

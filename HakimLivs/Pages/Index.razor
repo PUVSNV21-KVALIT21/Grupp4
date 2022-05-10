@@ -7,32 +7,32 @@
 
 <PageTitle>Hakim Livs</PageTitle>
 <div class="d-flex justify-content-center mb-4">
-            <div>
-                <div class="d-flex gap-2 align-items-centerm-2">
-                    <EditForm Model="@searchTerm" OnSubmit="@SearchProducts">
-                        <InputText @bind-Value="searchTerm" placeholder="Sök..."></InputText>
-                    </EditForm>
-                    <button class="btn btn-outline-secondary" type="button" @onclick="SearchProducts">🔎</button>
-                </div>
-                <div class="d-flex gap-1 m-2">
-                    <Dropdown>
-                        <DropdownToggle Color="Color.Primary">
-                            Sortera
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem @onclick='(() => SortProduct("highestPrice"))'>
-                                Högsta pris
-                            </DropdownItem>
-                            <DropdownDivider />
-                            <DropdownItem @onclick='(() => SortProduct("lowestPrice"))'>
-                                Lägsta pris
-                            </DropdownItem>
-                            <DropdownDivider />
-                            <DropdownItem @onclick='(() => SortProduct("stock"))'>
-                                Lagersaldo
-                            </DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
+    <div>
+        <div class="m-2">
+            <EditForm Model="@searchTerm" OnSubmit="@SearchProducts">
+                <InputText @bind-Value="searchTerm" placeholder="Sök..."></InputText>
+                <button class="btn btn-outline-secondary" type="submit" @onclick="@SearchProducts">🔎</button>
+            </EditForm>
+        </div>
+        <div class="d-flex gap-1 m-2">
+            <Dropdown>
+                <DropdownToggle Color="Color.Primary">
+                    Sortera
+                </DropdownToggle>
+                <DropdownMenu>
+                    <DropdownItem @onclick='(() => SortProduct("highestPrice"))'>
+                        Högsta pris
+                    </DropdownItem>
+                    <DropdownDivider />
+                    <DropdownItem @onclick='(() => SortProduct("lowestPrice"))'>
+                        Lägsta pris
+                    </DropdownItem>
+                    <DropdownDivider />
+                    <DropdownItem @onclick='(() => SortProduct("stock"))'>
+                        Lagersaldo
+                    </DropdownItem>
+                </DropdownMenu>
+            </Dropdown>
 
                     <Dropdown>
                         <DropdownToggle Color="Color.Primary">
@@ -52,7 +52,7 @@
                             </DropdownItem>
                             <DropdownDivider />
                             <DropdownItem>
-                                Vekanskt
+                                Veganskt
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>

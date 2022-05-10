@@ -66,7 +66,7 @@ namespace HakimLivs.Models
             NotifyStateChanged();
         }
 
-        public void ClearCart()
+        public async Task ClearCart()
         {
             selectedProducts.Clear();
             totalPrice = 0;
