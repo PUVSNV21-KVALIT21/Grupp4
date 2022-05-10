@@ -10,9 +10,9 @@
 <div class="d-flex justify-content-center mb-4">
     <div>
         <div class="m-2">
-            <EditForm Model="@searchTerm" OnValidSubmit="@SearchProducts">
+            <EditForm Model="@searchTerm" OnSubmit="@SearchProducts">
                 <InputText @bind-Value="searchTerm" placeholder="Sök..."></InputText>
-                <input type="button" value="Sök" />
+                <button class="btn btn-outline-secondary" type="submit" @onclick="@SearchProducts">🔎</button>
             </EditForm>
         </div>
         <div class="d-flex gap-1 m-2">
