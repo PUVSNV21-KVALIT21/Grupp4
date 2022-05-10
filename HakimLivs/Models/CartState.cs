@@ -68,6 +68,8 @@ namespace HakimLivs.Models
         {
             selectedProducts.Clear();
             totalPrice = 0;
+            NotifyStateChanged();
+
         }
 
         private void NotifyStateChanged() => OnChange?.Invoke();
