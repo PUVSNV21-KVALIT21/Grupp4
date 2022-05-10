@@ -9,11 +9,11 @@
 
 <div class="d-flex justify-content-center mb-4">
     <div>
-        <div class="m-2">
+        <div class="d-flex gap-2 align-items-centerm-2">
             <EditForm Model="@searchTerm" OnSubmit="@SearchProducts">
                 <InputText @bind-Value="searchTerm" placeholder="Sök..."></InputText>
-                <button class="btn btn-outline-secondary" type="submit" @onclick="@SearchProducts">🔎</button>
             </EditForm>
+                <button class="btn btn-outline-secondary" type="button" @onclick="SearchProducts" >🔎</button>
         </div>
         <div class="d-flex gap-1 m-2">
             <Dropdown>
