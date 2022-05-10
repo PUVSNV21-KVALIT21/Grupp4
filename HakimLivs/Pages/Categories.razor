@@ -1,6 +1,6 @@
 ﻿@using HakimLivs.Models
 
-<ul>
+<ul class="m-1">
 
     @if (CategoryList == null)
     {
@@ -10,19 +10,21 @@
     {
         @foreach (var cat in CategoryList)
         {
-            <li class="mb-2">
-
-            <button class="btn btn-secondary" @onclick="@(() => DisplayCategoryEvent.InvokeAsync(cat.Id))">@cat.Name</button>
+            <li class="list-unstyled mb-2">
+                <button class="category-btn btn btn-primary" @onclick="@(() => DisplayCategoryEvent.InvokeAsync(cat.Id))">@cat.Name</button>
             </li>
         }
     }
 
 </ul>
+
+
+
 @code {
     [Parameter]
     public List<Category> CategoryList { get; set; }
 
     [Parameter]
     public EventCallback<int> DisplayCategoryEvent { get; set; }
-    
+    private string selectedItem = "first";
 }
