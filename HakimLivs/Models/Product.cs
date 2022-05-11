@@ -14,6 +14,9 @@ namespace HakimLivs.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
         public Category Category { get; set; }
+        public bool IsVegan { get; set; }
+        public bool IsGlutenfree { get; set; }
+        public bool IsEco { get; set; }
         public int CategoryID { get; set; }
         public int Stock { get; set; }
         public string ImgPath { get; set; }
