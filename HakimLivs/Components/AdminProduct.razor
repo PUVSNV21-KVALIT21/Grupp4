@@ -1,10 +1,13 @@
 ﻿@using HakimLivs.Models
 @using HakimLivs.Services
 @inject ProductService ProductService
+@inject AdminService AdminService
 
 
-<div >
-<AdminProductModal UpdateProductListEvent="UpdateProductList"></AdminProductModal>
+
+<div>
+    <AdminProductModal UpdateProductListEvent="UpdateProductList"></AdminProductModal>
+    <button class="btn btn-primary" @onclick="LoadSampleData">Ladda testdata</button>
 
 
     @if (ProductList == null)
@@ -13,24 +16,24 @@
     }
     else
     {
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Namn</th>
-                        <th scope="col">Märke/Tillverkare</th>
-                        <th scope="col">Beskrivning</th>
-                        <th scope="col">Enhet</th>
-                        <th scope="col">Enhetstyp</th>
-                        <th scope="col">Innehållsförteckning</th>
-                        <th scope="col">Pris</th>
-                        <th scope="col">Kategori</th>
-                        <th scope="col">Antal i lager</th>
-                        <th scope="col">Bildsökväg</th>
-                    </tr>
-                </thead>
-                <tbody>
-        @foreach (var p in ProductList)
-        {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Namn</th>
+                    <th scope="col">Märke/Tillverkare</th>
+                    <th scope="col">Beskrivning</th>
+                    <th scope="col">Enhet</th>
+                    <th scope="col">Enhetstyp</th>
+                    <th scope="col">Innehållsförteckning</th>
+                    <th scope="col">Pris</th>
+                    <th scope="col">Kategori</th>
+                    <th scope="col">Antal i lager</th>
+                    <th scope="col">Bildsökväg</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in ProductList)
+                {
                     <tr>
                         <td>@p.Name</td>
                         <td>@p.Brand</td>
@@ -42,11 +45,13 @@
                         <td>@p.Category.Name</td>
                         <td>@p.Stock</td>
                         <td class="text-truncate" style="max-width: 150px;">@p.ImgPath</td>
-                        <td><button class="btn btn-danger" @onclick="(() => DeleteProduct(p))">Ta bort</button></td>
-                    </tr>                    
-        }
-                </tbody>
-            </table>
+                        <td>
+                            <button class="btn btn-danger" @onclick="(() => DeleteProduct(p))">Ta bort</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
 </div>
 
@@ -60,7 +65,11 @@
         await ProductService.DeleteProduct(product);
         await UpdateProductList();
     }
-    
+    async Task LoadSampleData()
+    {
+        await AdminService.LoadTestData();
+    }
+
     async Task UpdateProductList()
     {
         ProductList = await ProductService.GetProducts();
