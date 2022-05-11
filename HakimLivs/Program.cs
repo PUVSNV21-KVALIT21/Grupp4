@@ -1,6 +1,7 @@
 using HakimLivs.Areas.Identity;
 using HakimLivs.Data;
 using HakimLivs.Models;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using HakimLivs.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -11,8 +12,9 @@ using Microsoft.EntityFrameworkCore;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
-
+using HakimLivs.Services;
 var builder = WebApplication.CreateBuilder(args);
+var hakimApiKey = builder.Configuration["Hakim:API_KEY"];
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -23,12 +25,20 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
+builder.Services.AddTransient<IEmailSender, HakimLivs.Services.EmailSender>();
+builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddTransient<ProductService>();
 builder.Services.AddTransient<CategoryService>();
 builder.Services.AddTransient<AdminService>();
 builder.Services.AddScoped<CartState>();
+builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
+{
+    config.AddJsonFile("secrets.json",
+                        optional: true,
+                        reloadOnChange: true); ;
+});
 builder.Services
     .AddBlazorise(options =>
     {
@@ -63,5 +73,6 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+app.MapGet("/", () => hakimApiKey);
 
 app.Run();

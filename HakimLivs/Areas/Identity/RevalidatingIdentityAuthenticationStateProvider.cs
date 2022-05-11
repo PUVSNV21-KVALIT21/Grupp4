@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using MimeKit;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using System.Net.Mail;
 using System.Security.Claims;
 
 namespace HakimLivs.Areas.Identity
@@ -57,6 +61,15 @@ namespace HakimLivs.Areas.Identity
             }
             else if (!userManager.SupportsUserSecurityStamp)
             {
+                var sendGridClient = new SendGridClient("API_KEY");
+                var from = new EmailAddress("from email", "from user");
+                var subject = "subject";
+                var to = new EmailAddress("to email", "to name");
+                var plainContent = "Hello";
+                var htmlContent = "<h1>Hello</h1>";
+                var mailMessage = MailHelper.CreateSingleEmail(from, to, subject, plainContent, htmlContent);
+                await sendGridClient.SendEmailAsync(mailMessage);
+
                 return true;
             }
             else
