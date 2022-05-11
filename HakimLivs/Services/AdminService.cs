@@ -1,5 +1,6 @@
 ﻿using HakimLivs.Data;
 using HakimLivs.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HakimLivs.Services
 {
@@ -14,13 +15,21 @@ namespace HakimLivs.Services
 
         public async Task LoadTestData()
         {
-
-            var categoryList = new Category[] { 
-                new Category { Name ="Skafferi" },
-                new Category { Name ="Träning" },
-                new Category { Name ="Snacks" },
-                new Category { Name ="Drycker" },
-            };
+            var categoryList = new List<Category>();
+            if (!_context.Categories.Any())
+            {
+                 categoryList = new List<Category> { 
+                    new Category { Name ="Skafferi" },
+                    new Category { Name ="Träning" },
+                    new Category { Name ="Snacks" },
+                    new Category { Name ="Drycker" },
+                };
+            }
+            else
+            {
+                categoryList = await _context.Categories.ToListAsync();
+            }
+            
 
             if (!_context.Products.Any())
             {
