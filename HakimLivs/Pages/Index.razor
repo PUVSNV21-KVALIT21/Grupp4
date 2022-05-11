@@ -6,14 +6,13 @@
 
 
 <PageTitle>Hakim Livs</PageTitle>
-
 <div class="d-flex justify-content-center mb-4">
     <div>
-        <div class="d-flex gap-2 align-items-centerm-2">
+        <div class="m-2">
             <EditForm Model="@searchTerm" OnSubmit="@SearchProducts">
                 <InputText @bind-Value="searchTerm" placeholder="Sök..."></InputText>
+                <button class="btn btn-outline-secondary" type="submit" @onclick="@SearchProducts">🔎</button>
             </EditForm>
-                <button class="btn btn-outline-secondary" type="button" @onclick="SearchProducts" >🔎</button>
         </div>
         <div class="d-flex gap-1 m-2">
             <Dropdown>
@@ -35,37 +34,50 @@
                 </DropdownMenu>
             </Dropdown>
 
-            <Dropdown>
-                <DropdownToggle Color="Color.Primary">
-                    Filtrera
-                </DropdownToggle>
-                <DropdownMenu>
-                    <DropdownItem>
-                        EJ IMPLEMENTERAD ÄN ⚠️
-                    </DropdownItem>
-                    <DropdownDivider />
-                    <DropdownItem>
-                        Eko
-                    </DropdownItem>
-                    <DropdownDivider />
-                    <DropdownItem>
-                        Glutenfritt
-                    </DropdownItem>
-                    <DropdownDivider />
-                    <DropdownItem>
-                        Vekanskt
-                    </DropdownItem>
-                </DropdownMenu>
-            </Dropdown>
+                    <Dropdown>
+                        <DropdownToggle Color="Color.Primary">
+                            Filtrera
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            <DropdownItem>
+                                EJ IMPLEMENTERAD ÄN ⚠️
+                            </DropdownItem>
+                            <DropdownDivider />
+                            <DropdownItem>
+                                Eko
+                            </DropdownItem>
+                            <DropdownDivider />
+                            <DropdownItem>
+                                Glutenfritt
+                            </DropdownItem>
+                            <DropdownDivider />
+                            <DropdownItem>
+                                Veganskt
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                </div>
+
+            </div>
         </div>
 
-    </div>
-
-</div>
 <div class="d-flex">
-    <Categories CategoryList="@CategoryList" DisplayCategoryEvent="DisplayCategory"></Categories>
-    <Products searchTerm="@searchTerm" ProductList="@ProductList"></Products>
 </div>
+
+
+<Layout>    
+    <Layout Sider>
+        <LayoutSiderContent>
+            <Categories CategoryList="@CategoryList" DisplayCategoryEvent="DisplayCategory"></Categories>
+        </LayoutSiderContent>
+        <Layout>
+            <LayoutContent>
+                <Products searchTerm="@searchTerm" ProductList="@ProductList"></Products>
+            </LayoutContent>
+        </Layout>
+    </Layout>
+</Layout>
+
 
 
 @code {

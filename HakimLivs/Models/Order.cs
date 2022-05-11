@@ -9,5 +9,6 @@
         public DateTime Orderdate { get; set; }
         public string DeliveryMethod { get; set; }
         public string DeliveryAdress { get; set; }
+        public decimal TotalOrderValue { get; set; }
     }
 }

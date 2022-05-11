@@ -81,14 +81,18 @@
     private async Task AddProductQuantity(BasketProduct basketProduct)
     {
         CartState.AddProductQuantity(basketProduct);
-        await ProtectedLocalStorage.SetAsync("product", CartState.selectedProducts);
+        await ProtectedLocalStorage.SetAsync("productsInCart", CartState.selectedProducts);
+        await ProtectedLocalStorage.SetAsync("totalPrice", CartState.totalPrice);
+
 
     }
 
     private async Task SubtractProductQuantity(BasketProduct basketProduct)
     {
-        CartState.SubtractProductQuantity(basketProduct);
-        await ProtectedLocalStorage.SetAsync("product", CartState.selectedProducts);
+        await CartState.SubtractProductQuantity(basketProduct);
+        await ProtectedLocalStorage.SetAsync("productsInCart", CartState.selectedProducts);
+        await ProtectedLocalStorage.SetAsync("totalPrice", CartState.totalPrice);
+
 
     }
 
@@ -106,6 +110,8 @@
         return Task.CompletedTask;
     }
 
+
+
     protected override void OnInitialized()
     {
         CartState.OnChange += StateHasChanged;
@@ -115,4 +121,32 @@
     {
         CartState.OnChange -= StateHasChanged;
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var productsInCart = await ProtectedLocalStorage.GetAsync<List<BasketProduct>>("productsInCart");
+            var products = productsInCart.Success ? productsInCart.Value.ToList() : null; 
+            var totalPriceInCart = await ProtectedLocalStorage.GetAsync<decimal>("totalPrice");
+            var totalprice = totalPriceInCart.Success ? totalPriceInCart.Value : 0; 
+            if (products != null && totalprice != 0)
+            {
+                CartState.selectedProducts = products;
+                CartState.totalPrice = totalprice;
+                CartState.NotifyStateChanged();
+            }
+    }
+}
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    var result = await ProtectedLocalStorage.GetAsync<List<BasketProduct>>("product");
+    //    var basketProducts = result.Success ? result.Value.ToList() : null;       
+    //    if (basketProducts != null)
+    //    {
+    //        ProductList = basketProducts.Select(bp => bp.Product).ToList();
+    //    }
+        
+    //}
 }

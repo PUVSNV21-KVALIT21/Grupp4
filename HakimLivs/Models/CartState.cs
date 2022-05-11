@@ -11,6 +11,8 @@ namespace HakimLivs.Models
         public decimal? totalPrice { get; set; } = 0;
         public event Action OnChange;
 
+        
+
         public async Task AddProduct(Product product)
         {
             BasketProduct basketProduct = new BasketProduct();
@@ -35,7 +37,7 @@ namespace HakimLivs.Models
 
        
 
-        public void AddProductQuantity(BasketProduct basketProduct)
+        public async Task AddProductQuantity(BasketProduct basketProduct)
         {
             var product = selectedProducts.IndexOf(basketProduct);
 
@@ -44,7 +46,7 @@ namespace HakimLivs.Models
 
             NotifyStateChanged();
         }
-        public void SubtractProductQuantity(BasketProduct basketProduct)
+        public async Task SubtractProductQuantity(BasketProduct basketProduct)
         {
             var product = selectedProducts.IndexOf(basketProduct);
 
@@ -64,7 +66,7 @@ namespace HakimLivs.Models
             NotifyStateChanged();
         }
 
-        public void ClearCart()
+        public async Task ClearCart()
         {
             selectedProducts.Clear();
             totalPrice = 0;
@@ -72,7 +74,7 @@ namespace HakimLivs.Models
 
         }
 
-        private void NotifyStateChanged() => OnChange?.Invoke();
+        public void NotifyStateChanged() => OnChange?.Invoke();
 
 
     }
