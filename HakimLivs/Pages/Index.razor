@@ -34,38 +34,35 @@
                 </DropdownMenu>
             </Dropdown>
 
-                    <Dropdown>
-                        <DropdownToggle Color="Color.Primary">
-                            Filtrera
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem>
-                                EJ IMPLEMENTERAD ÄN ⚠️
-                            </DropdownItem>
-                            <DropdownDivider />
-                            <DropdownItem>
-                                Eko
-                            </DropdownItem>
-                            <DropdownDivider />
-                            <DropdownItem>
-                                Glutenfritt
-                            </DropdownItem>
-                            <DropdownDivider />
-                            <DropdownItem>
-                                Veganskt
-                            </DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
-                </div>
-
-            </div>
+            <Dropdown>
+                <DropdownToggle Color="Color.Primary">
+                    Filtrera
+                </DropdownToggle>
+                <DropdownMenu>
+                    <DropdownDivider />
+                    <DropdownItem @onclick='(() => FilterProduct("eco"))'>
+                        Eko
+                    </DropdownItem>
+                    <DropdownDivider />
+                    <DropdownItem @onclick='(() => FilterProduct("glutenFree"))'>
+                        Glutenfritt
+                    </DropdownItem>
+                    <DropdownDivider />
+                    <DropdownItem @onclick='(() => FilterProduct("vegan"))'>
+                        Veganskt
+                    </DropdownItem>
+                </DropdownMenu>
+            </Dropdown>
         </div>
+
+    </div>
+</div>
 
 <div class="d-flex">
 </div>
 
 
-<Layout>    
+<Layout>
     <Layout Sider>
         <LayoutSiderContent>
             <Categories CategoryList="@CategoryList" DisplayCategoryEvent="DisplayCategory"></Categories>
@@ -93,7 +90,6 @@
 
     void SortProduct(string sortBy)
     {
-
         switch (sortBy)
         {
             case "highestPrice":
@@ -106,9 +102,23 @@
                 ProductList = ProductList.OrderByDescending(p => p.Stock).ToList();
                 break;
         }
-
-
     }
+    void FilterProduct(string filterBy)
+    {
+        switch (filterBy)
+        {
+            case "glutenFree":
+                ProductList = ProductList.Where(p => p.IsGlutenfree == true).ToList();
+                break;
+            case "eco":
+                ProductList = ProductList.Where(p => p.IsEco == true).ToList();
+                break;
+            case "vegan":
+                ProductList = ProductList.Where(p => p.IsVegan == true).ToList();
+                break;
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
         ProductList = await ProductService.GetProducts();
