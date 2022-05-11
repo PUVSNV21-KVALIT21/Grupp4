@@ -43,7 +43,7 @@ namespace HakimLivs.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Baskets");
+                    b.ToTable("Baskets", (string)null);
                 });
 
             modelBuilder.Entity("HakimLivs.Models.BasketProduct", b =>
@@ -69,7 +69,7 @@ namespace HakimLivs.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("BasketProducts");
+                    b.ToTable("BasketProducts", (string)null);
                 });
 
             modelBuilder.Entity("HakimLivs.Models.Category", b =>
@@ -86,7 +86,7 @@ namespace HakimLivs.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("HakimLivs.Models.Discount", b =>
@@ -106,7 +106,7 @@ namespace HakimLivs.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Discounts");
+                    b.ToTable("Discounts", (string)null);
                 });
 
             modelBuilder.Entity("HakimLivs.Models.Order", b =>
@@ -142,7 +142,7 @@ namespace HakimLivs.Migrations
 
                     b.HasIndex("BasketId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("HakimLivs.Models.Product", b =>
@@ -155,7 +155,8 @@ namespace HakimLivs.Migrations
 
                     b.Property<string>("Brand")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");
@@ -179,7 +180,8 @@ namespace HakimLivs.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -202,7 +204,7 @@ namespace HakimLivs.Migrations
 
                     b.HasIndex("CategoryID");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
