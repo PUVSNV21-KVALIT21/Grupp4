@@ -7,13 +7,15 @@
 <Modal @ref="modalRef">
     <ModalContent Centered>
             <EditForm Model="@productModel" OnValidSubmit="@SaveProduct">
+                <DataAnnotationsValidator/>
         <ModalHeader>
             <ModalTitle>@ModalTitle</ModalTitle>
             <CloseButton />
         </ModalHeader>
         <ModalBody>
-                <label class="form-label" for="name">fena</label>
+                <label class="form-label" for="name">Produktnamn</label>
                 <InputText class="form-control" id="name" @bind-Value="productModel.Name" />
+                <ValidationMessage For="() => productModel.Name"/>
 
                 <label class="form-label" for="brand">Märke/tillverkare</label>
                 <InputText class="form-control" id="brand" @bind-Value="productModel.Brand" />
@@ -62,7 +64,9 @@
     public Product productModel { get; set; } = new();
     [Parameter]
     public EventCallback UpdateProductListEvent { get; set; }
-    
+
+    public Product product1 = new Product();
+
     private List<Category> Categories { get; set; } = new();
     private string ModalTitle { get; set; }
     private Modal modalRef;    
