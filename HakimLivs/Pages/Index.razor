@@ -6,13 +6,12 @@
 
 
 <PageTitle>Hakim Livs</PageTitle>
-
 <div class="d-flex justify-content-center mb-4">
     <div>
         <div class="m-2">
-            <EditForm Model="@searchTerm" OnValidSubmit="@SearchProducts">
+            <EditForm Model="@searchTerm" OnSubmit="@SearchProducts">
                 <InputText @bind-Value="searchTerm" placeholder="Sök..."></InputText>
-                <input type="button" value="Sök" />
+                <button class="btn btn-outline-secondary" type="submit" @onclick="@SearchProducts">🔎</button>
             </EditForm>
         </div>
         <div class="d-flex gap-1 m-2">
@@ -40,32 +39,42 @@
                     Filtrera
                 </DropdownToggle>
                 <DropdownMenu>
-                    <DropdownItem>
-                        EJ IMPLEMENTERAD ÄN ⚠️
-                    </DropdownItem>
                     <DropdownDivider />
-                    <DropdownItem>
+                    <DropdownItem @onclick='(() => FilterProduct("eco"))'>
                         Eko
                     </DropdownItem>
                     <DropdownDivider />
-                    <DropdownItem>
+                    <DropdownItem @onclick='(() => FilterProduct("glutenFree"))'>
                         Glutenfritt
                     </DropdownItem>
                     <DropdownDivider />
-                    <DropdownItem>
-                        Vekanskt
+                    <DropdownItem @onclick='(() => FilterProduct("vegan"))'>
+                        Veganskt
                     </DropdownItem>
                 </DropdownMenu>
             </Dropdown>
         </div>
 
     </div>
+</div>
 
-</div>
 <div class="d-flex">
-    <Categories CategoryList="@CategoryList" DisplayCategoryEvent="DisplayCategory"></Categories>
-    <Products searchTerm="@searchTerm" ProductList="@ProductList"></Products>
 </div>
+
+
+<Layout>
+    <Layout Sider>
+        <LayoutSiderContent>
+            <Categories CategoryList="@CategoryList" DisplayCategoryEvent="DisplayCategory"></Categories>
+        </LayoutSiderContent>
+        <Layout>
+            <LayoutContent>
+                <Products searchTerm="@searchTerm" ProductList="@ProductList"></Products>
+            </LayoutContent>
+        </Layout>
+    </Layout>
+</Layout>
+
 
 
 @code {
@@ -81,7 +90,6 @@
 
     void SortProduct(string sortBy)
     {
-
         switch (sortBy)
         {
             case "highestPrice":
@@ -94,9 +102,23 @@
                 ProductList = ProductList.OrderByDescending(p => p.Stock).ToList();
                 break;
         }
-
-
     }
+    void FilterProduct(string filterBy)
+    {
+        switch (filterBy)
+        {
+            case "glutenFree":
+                ProductList = ProductList.Where(p => p.IsGlutenfree == true).ToList();
+                break;
+            case "eco":
+                ProductList = ProductList.Where(p => p.IsEco == true).ToList();
+                break;
+            case "vegan":
+                ProductList = ProductList.Where(p => p.IsVegan == true).ToList();
+                break;
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
         ProductList = await ProductService.GetProducts();

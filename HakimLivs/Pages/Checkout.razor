@@ -36,8 +36,6 @@
 </RadioGroup>
 
 
-
-
 <AuthorizeView>
     <Authorized>
         <Button Color="Color.Primary" Clicked="@ShowModal">Beställ</Button>
@@ -47,17 +45,6 @@
         <p>Du måste vara inloggad för att kunna beställa</p>
     </NotAuthorized>
 </AuthorizeView>
-
-
-
-@*Display data from local storage*@
-
-@*@foreach (var p in testp)
-    {
-
-    <h4>@p.Product.Name</h4>
-    <p>@p.ProductQuantity</p>
-    }*@
 
 <Modal @bind-Visible="@modalVisible">
     <ModalContent>
@@ -101,15 +88,7 @@
 
     private bool orderButtonDisabled = false;
 
-    private bool modalVisible;
-    private List<BasketProduct> testp = new();
-
-    protected override async Task OnInitializedAsync()
-    {
-        var result = await ProtectedLocalStorage.GetAsync<List<BasketProduct>>("product");
-        testp = result.Success ? result.Value.ToList() : null;
-    }
-
+    private bool modalVisible; 
 
     private Task ShowModal()
     {
@@ -125,23 +104,26 @@
         return Task.CompletedTask;
     }
 
-    private void ClearCart()
+    private async Task ClearCart()
     {
-        CartState.ClearCart();
+        await CartState.ClearCart();
+        await ProtectedLocalStorage.DeleteAsync("productsInCart");
+        await ProtectedLocalStorage.DeleteAsync("totalPrice");
+
     }
 
     private async Task AddProductQuantity(BasketProduct basketProduct)
     {
         CartState.AddProductQuantity(basketProduct);
-        await ProtectedLocalStorage.SetAsync("product", CartState.selectedProducts);
-
+        await ProtectedLocalStorage.SetAsync("productsInCart", CartState.selectedProducts);
+        await ProtectedLocalStorage.SetAsync("totalPrice", CartState.totalPrice);
     }
 
     private async Task SubtractProductQuantity(BasketProduct basketProduct)
     {
         CartState.SubtractProductQuantity(basketProduct);
-        await ProtectedLocalStorage.SetAsync("product", CartState.selectedProducts);
-
+        await ProtectedLocalStorage.SetAsync("productsInCart", CartState.selectedProducts);
+        await ProtectedLocalStorage.SetAsync("totalPrice", CartState.totalPrice);
     }
 
 

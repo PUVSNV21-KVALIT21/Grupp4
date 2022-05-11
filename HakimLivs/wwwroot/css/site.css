@@ -62,3 +62,20 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+
+.category-btn{
+    width:100%;
+    transition:0.2s;
+}
+.category-btn:hover {
+    transform: scale(1.05);
+}
+.product-card {
+    transition: 0.2s;
+    -webkit-box-shadow: 0px 5px 10px -5px #000000;
+    box-shadow: 0px 5px 10px -5px #000000;
+}
+    .product-card:hover {
+        transform: scale(1.01);
+    }

@@ -5,15 +5,6 @@
 @inject CartState CartState
 @inject ProductService ProductService
 
-@*<div class="d-flex justify-content-center mb-4">
-
-    <input type="text" @bind-value="@searchTerm" placeholder="Sök..."/>
-    <input type="button" @onclick="@SearchProducts" value="Sök"  />
-
-</div>*@
-
-
-
 <div class="d-flex justify-content-center flex-wrap gap-2">
 
     @if (ProductList == null)
@@ -24,7 +15,7 @@
     {
         @foreach (var p in ProductList)
         {
-            <div class="card text-center" style="width: 15rem;">
+            <div class="product-card card text-center m-1" style="width: 15rem;">
                 <div class="card-body">
                     <img src="@p.ImgPath" class="img" alt="@p.Name" width="200" height="200" style="object-fit:contain" />
                     <p>@p.Price kr/st</p>
@@ -50,18 +41,7 @@
     [Parameter] 
     public List<Product> ProductList { get; set; }
     [Parameter]
-    public string searchTerm { get; set; }
-
-    //async Task SearchProducts()
-    //{
-    //    ProductList = await ProductService.SearchProduct(searchTerm);
-    //}
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    ProductList = await ProductService.GetProducts();
-    //}
-
-
+    public string SearchTerm { get; set; }
 
 
     protected override void OnInitialized()
@@ -70,8 +50,10 @@
     }
     public async Task AddToCart(Product p)
     {
-        CartState.AddProduct(p);
-        await ProtectedLocalStorage.SetAsync("product", CartState.selectedProducts);
+        await CartState.AddProduct(p);
+        await ProtectedLocalStorage.SetAsync("productsInCart", CartState.selectedProducts);
+        await ProtectedLocalStorage.SetAsync("totalPrice", CartState.totalPrice);
+
 
     }
     public void Dispose()
