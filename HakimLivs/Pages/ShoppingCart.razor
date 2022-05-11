@@ -83,8 +83,6 @@
         CartState.AddProductQuantity(basketProduct);
         await ProtectedLocalStorage.SetAsync("productsInCart", CartState.selectedProducts);
         await ProtectedLocalStorage.SetAsync("totalPrice", CartState.totalPrice);
-
-
     }
 
     private async Task SubtractProductQuantity(BasketProduct basketProduct)
@@ -92,8 +90,6 @@
         await CartState.SubtractProductQuantity(basketProduct);
         await ProtectedLocalStorage.SetAsync("productsInCart", CartState.selectedProducts);
         await ProtectedLocalStorage.SetAsync("totalPrice", CartState.totalPrice);
-
-
     }
 
     private Task ShowModal()
@@ -109,8 +105,6 @@
 
         return Task.CompletedTask;
     }
-
-
 
     protected override void OnInitialized()
     {
