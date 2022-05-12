@@ -2,12 +2,14 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedLocalStorage ProtectedLocalStorage
 @inject CartState CartState
+@inject OrderService OrderService
 @implements IDisposable
 
 <h3>Kassa</h3>
 
 
 <h4>Varor:</h4>
+
 <div>
     @foreach (var p in CartState.selectedProducts)
     {
@@ -27,6 +29,10 @@
         </div>
     }
 </div>
+<label for="discountCode">Rabattkod</label>
+<input class="form-control-sm" name="discountCode" type="text" @bind-value="@discountCode" />
+
+<p>@discountCode</p>
 
 <strong>@CartState.totalPrice kr</strong>
 
@@ -85,16 +91,22 @@
 
 @code {
     private string checkedValue = "invoice";
+    private string discountCode;
 
     private bool orderButtonDisabled = false;
 
     private bool modalVisible; 
 
-    private Task ShowModal()
+    private async Task ShowModal()
     {
+        await SaveOrder();
         modalVisible = true;
 
-        return Task.CompletedTask;
+        await Task.CompletedTask;
+    }
+    async Task SaveOrder()
+    {
+        await OrderService.SaveOrder(CartState.selectedProducts, CartState.totalPrice);
     }
 
     private Task HideModal()

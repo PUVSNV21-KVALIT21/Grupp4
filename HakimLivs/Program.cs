@@ -28,6 +28,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuth
 builder.Services.AddTransient<ProductService>();
 builder.Services.AddTransient<CategoryService>();
 builder.Services.AddTransient<AdminService>();
+builder.Services.AddTransient<OrderService>();
 builder.Services.AddScoped<CartState>();
 builder.Services
     .AddBlazorise(options =>

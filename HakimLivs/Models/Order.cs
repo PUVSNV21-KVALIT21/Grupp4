@@ -3,7 +3,6 @@
     public class Order
     {
         public int Id { get; set; }
-
         public Basket Basket { get; set; }
         public string PaymentMethod { get; set; }
         public DateTime Orderdate { get; set; }
