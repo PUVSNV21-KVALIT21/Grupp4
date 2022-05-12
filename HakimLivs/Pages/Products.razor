@@ -24,8 +24,8 @@
                     </p>
                     <div class="mb-1">
                         <span>@p.Brand</span> |
-                        <span>@p.Unit </span>
-                        <span>@p.UnitType</span>
+                        <span>@p.UnitQty </span>
+                        <span>@p.Unit.Name</span>
                     </div>
 
                     <button @onclick="(() => AddToCart(p))" class="btn btn-primary">Lägg till i varukorg</button>

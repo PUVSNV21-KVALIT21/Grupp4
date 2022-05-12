@@ -1,4 +1,5 @@
 ﻿@inject CategoryService CategoryService
+@inject UnitService UnitService
 @inject ProductService ProductService
 @inject NavigationManager NavigationManager;
 
@@ -23,26 +24,40 @@
                 <label class="form-label" for="desc">Beskrivning</label>
                 <InputText class="form-control" id="desc" @bind-Value="productModel.Description" />
 
-                <label class="form-label" for="unit">Enhet</label>
-                <InputNumber class="form-control" id="unit" @bind-Value="productModel.Unit" />
+                <label class="form-label" for="unit">Mängd</label>
+                <InputNumber class="form-control" id="unit" @bind-Value="productModel.UnitQty" />
 
-                <label class="form-label" for="unitType">Enhetstyp</label>
-                <InputText class="form-control" id="uniType" @bind-Value="productModel.UnitType" />
+                <InputSelect class="form-control" id="category" @bind-Value="productModel.UnitID">
+                    <SelectItem Value="0" Disabled>Välj kategori</SelectItem>
+                    @foreach (var unit in Units)
+                    {
+                        <option value="@unit.Id">@unit.Name</option>
+                    }
+                </InputSelect>
 
-                <label class="form-label" for="ToC">Innehållsförteckning</label>
-                <InputText class="form-control" id="ToC" @bind-Value="productModel.TableOfContent" />
+                <label class="form-check-label" for="ToC">Innehållsförteckning</label>
+                <InputText class="form-check-inline" id="ToC" @bind-Value="productModel.TableOfContent" />
 
-                <label class="form-label" for="price">Pris</label>
-                <InputNumber class="form-control" id="price" @bind-Value="productModel.Price" />
+                <label class="form-check-label" for="price">Pris</label>
+                <InputNumber class="form-check-inline" id="price" @bind-Value="productModel.Price" />
 
-                <label class="form-label" for="category">Kategori</label>
-                <InputSelect class="form-control" id="category" @bind-Value="productModel.CategoryID">
+                <label class="form-check-label" for="category">Kategori</label>
+                <InputSelect class="form-check-form-check-inline" id="category" @bind-Value="productModel.CategoryID">
                     <SelectItem Value="0" Disabled>Välj kategori</SelectItem>
                     @foreach (var cat in Categories)
                     {
                         <option value="@cat.Id">@cat.Name</option>
                     }
                 </InputSelect>
+
+                <label class"form-label" for="vegan">Vegan</label>
+                <InputCheckbox class="form-control" id="vegan" @bind-Value="productModel.IsVegan"/>
+
+                <label class"form-label" for="glutenfree">Glutenfri</label>
+                <InputCheckbox class="form-control" id="glutenfree" @bind-Value="productModel.IsGlutenfree"/>
+
+                <label class"form-label" for="eco">Ekologisk</label>
+                <InputCheckbox class="form-control" id="eco" @bind-Value="productModel.IsEco"/>
 
                 <label class="form-label" for="stock">Lagersaldo</label>
                 <InputNumber class="form-control" id="stock" @bind-Value="productModel.Stock" />
@@ -65,15 +80,15 @@
     [Parameter]
     public EventCallback UpdateProductListEvent { get; set; }
 
-    public Product product1 = new Product();
-
     private List<Category> Categories { get; set; } = new();
+    private List<Unit> Units { get; set; } = new();
     private string ModalTitle { get; set; }
     private Modal modalRef;    
 
     protected async override Task OnInitializedAsync()
     {
         Categories = await CategoryService.GetCategories();
+        Units = await UnitService.GetUnits();
     }
 
     public Task ShowModal(Product product, string modalTitle)
