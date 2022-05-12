@@ -1,24 +1,43 @@
 ﻿@page "/admin"
+
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<IdentityUser> _UserManager
+@inject RoleManager<IdentityRole> _RoleManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject AdminService AdminService
 @inject ProductService ProductService
 
+<AuthorizeView Roles="Administrators">
+    <Authorized>
 
+        <button class="btn btn-primary" @onclick='(() => ShowStuff("ShowProducts"))'>Produkter</button>
+        <button class="btn btn-primary" @onclick='(() => ShowStuff("ShowUsers"))'>Användare</button>
 
-<button class="btn btn-primary" @onclick="LoadSampleData">Ladda testdata</button>
+        @if (showProducts)
+        {
+            <AdminProduct ProductList="@ProductList"></AdminProduct>
+        }
+        @if (showUsers)
+        {
+            <AdminUsers ColUsers="@ColUsers"></AdminUsers>
+            
+        }
 
-<button class="btn btn-primary" @onclick='(() => ShowStuff("ShowProducts"))'>Produkter</button>
+    </Authorized>
+    <NotAuthorized>
+        <p>You're not signed in as a user in @ADMINISTRATION_ROLE.</p>
+    </NotAuthorized>
 
-@if (showProducts)
-{
-    <AdminProduct ProductList="@ProductList" ></AdminProduct>
-}
-
-
+</AuthorizeView>
 
 @code {
     private List<Product> ProductList;
 
     bool showProducts = false;
+    bool showUsers = false;
+
+    string test = "";
 
     void ShowStuff(string text)
     {
@@ -26,18 +45,110 @@
         {
             case "ShowProducts":
                 showProducts = !showProducts;
+                if (true)
+                {
+
+                }
+                break;
+            case "ShowUsers":
+                showUsers = !showUsers;
+                test = "AdminUsers";
                 break;
         }
     }
 
-    async Task LoadSampleData()
-    {
-        await AdminService.LoadTestData();
-    }
 
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //}
+
+
+    /////////////////////////////////////////////
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    string ADMINISTRATION_ROLE = "Administrators";
+    System.Security.Claims.ClaimsPrincipal CurrentUser;
     protected override async Task OnInitializedAsync()
     {
         ProductList = await ProductService.GetProducts();
+
+        // ensure there is a ADMINISTRATION_ROLE
+        var RoleResult = await _RoleManager.FindByNameAsync(ADMINISTRATION_ROLE);
+        if (RoleResult == null)
+        {
+            // Create ADMINISTRATION_ROLE Role
+            await _RoleManager.CreateAsync(new IdentityRole(ADMINISTRATION_ROLE));
+        }
+        // Ensure a user named Admin@BlazorHelpWebsite.com is an Administrator
+        var user = await _UserManager.FindByNameAsync("admin@example.com");
+        if (user != null)
+        {
+            // Is Admin@BlazorHelpWebsite.com in administrator role?
+            var UserResult = await _UserManager.IsInRoleAsync(user, ADMINISTRATION_ROLE);
+            if (!UserResult)
+            {
+                // Put admin in Administrator role
+                await _UserManager.AddToRoleAsync(user, ADMINISTRATION_ROLE);
+            }
+        }
+        // Get the current logged in user
+        CurrentUser = (await authenticationStateTask).User;
+        // Get the users
+        GetUsers();
     }
 
+    // Property used to add or edit the currently selected user
+    IdentityUser objUser = new IdentityUser();
+    // Tracks the selected role for the currently selected user
+    string CurrentUserRole { get; set; } = "Users";
+    // Collection to display the existing users
+    List<IdentityUser> ColUsers = new List<IdentityUser>();
+    // Options to display in the roles dropdown when editing a user
+    List<string> Options = new List<string>() { "Users", "Administrators" };
+    // To hold any possible errors
+    string strError = "";
+    // To enable showing the Popup
+    bool ShowPopup = false;
+
+    void AddNewUser()
+    {
+    }
+    async Task SaveUser()
+    {
+    }
+    async Task EditUser(IdentityUser _IdentityUser)
+    {
+    }
+    async Task DeleteUser()
+    {
+    }
+    void ClosePopup()
+    {
+        // Close the Popup
+        ShowPopup = false;
+    }
+
+    public void GetUsers()
+    {
+        // clear any error messages
+        strError = "";
+        // Collection to hold users
+        ColUsers = new List<IdentityUser>();
+        // get users from _UserManager
+        var user = _UserManager.Users.Select(x => new IdentityUser
+            {
+                Id = x.Id,
+                UserName = x.UserName,
+                Email = x.Email,
+                PasswordHash = "*****"
+            });
+        foreach (var item in user)
+        {
+            ColUsers.Add(item);
+        }
+    }
 }
+
+
