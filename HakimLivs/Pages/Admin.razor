@@ -39,22 +39,17 @@
     bool showProducts = false;
     bool showUsers = false;
 
-    string test = "";
-
     void ShowStuff(string text)
     {
         switch (text)
         {
             case "ShowProducts":
                 showProducts = !showProducts;
-                if (true)
-                {
-
-                }
+                showUsers = false;
                 break;
             case "ShowUsers":
                 showUsers = !showUsers;
-                test = "AdminUsers";
+                showProducts = false;
                 break;
         }
     }
