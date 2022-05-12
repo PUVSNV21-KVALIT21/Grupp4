@@ -4,6 +4,7 @@
 @inject ProtectedLocalStorage ProtectedLocalStorage
 @inject CartState CartState
 @inject ProductService ProductService
+@inject UnitService UnitService
 
 <div class="d-flex justify-content-center flex-wrap gap-2">
 
@@ -25,7 +26,7 @@
                     <div class="mb-1">
                         <span>@p.Brand</span> |
                         <span>@p.UnitQty </span>
-                        <span>@p.Unit.Name</span>
+                        <span>@p.Unit</span>
                     </div>
 
                     <button @onclick="(() => AddToCart(p))" class="btn btn-primary">Lägg till i varukorg</button>

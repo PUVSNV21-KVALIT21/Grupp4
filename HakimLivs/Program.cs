@@ -26,6 +26,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddTransient<ProductService>();
+builder.Services.AddTransient<UnitService>();
 builder.Services.AddTransient<CategoryService>();
 builder.Services.AddTransient<AdminService>();
 builder.Services.AddScoped<CartState>();

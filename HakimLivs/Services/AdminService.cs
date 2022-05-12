@@ -35,6 +35,7 @@ namespace HakimLivs.Services
                 new Unit { Name = "cl"},
                 new Unit { Name = "l"},
                 new Unit { Name = "pack"},
+                new Unit { Name = "st"},
             };
 
             var categoryExists = await _context.Categories.AnyAsync();

@@ -20,29 +20,35 @@
 
                 <label class="form-label" for="brand">Märke/tillverkare</label>
                 <InputText class="form-control" id="brand" @bind-Value="productModel.Brand" />
+                <ValidationMessage For="() => productModel.Brand"/>
+
 
                 <label class="form-label" for="desc">Beskrivning</label>
                 <InputText class="form-control" id="desc" @bind-Value="productModel.Description" />
+                <ValidationMessage For="() => productModel.Description"/>
 
                 <label class="form-label" for="unit">Mängd</label>
                 <InputNumber class="form-control" id="unit" @bind-Value="productModel.UnitQty" />
+                <ValidationMessage For="() => productModel.UnitQty"/>
 
-                <InputSelect class="form-control" id="category" @bind-Value="productModel.UnitID">
-                    <SelectItem Value="0" Disabled>Välj kategori</SelectItem>
+                 <label class="form-check-label" for="unit">Enhetstyp</label>
+                <InputSelect class="form-control" id="unit" @bind-Value="productModel.UnitID">
+                    <SelectItem Value="0" Disabled>Välj enhetstyp</SelectItem>
                     @foreach (var unit in Units)
                     {
                         <option value="@unit.Id">@unit.Name</option>
                     }
                 </InputSelect>
 
-                <label class="form-check-label" for="ToC">Innehållsförteckning</label>
-                <InputText class="form-check-inline" id="ToC" @bind-Value="productModel.TableOfContent" />
+                <label class="form-label" for="ToC">Innehållsförteckning</label>
+                <InputText class="form-control" id="ToC" @bind-Value="productModel.TableOfContent" />
 
-                <label class="form-check-label" for="price">Pris</label>
-                <InputNumber class="form-check-inline" id="price" @bind-Value="productModel.Price" />
+                <label class="form-label" for="price">Pris</label>
+                <InputNumber class="form-control" id="price" @bind-Value="productModel.Price" />
+                <ValidationMessage For="() => productModel.Price"/>
 
-                <label class="form-check-label" for="category">Kategori</label>
-                <InputSelect class="form-check-form-check-inline" id="category" @bind-Value="productModel.CategoryID">
+                <label class="form-label" for="category">Kategori</label>
+                <InputSelect class="form-control" id="category" @bind-Value="productModel.CategoryID">
                     <SelectItem Value="0" Disabled>Välj kategori</SelectItem>
                     @foreach (var cat in Categories)
                     {
@@ -50,20 +56,22 @@
                     }
                 </InputSelect>
 
-                <label class"form-label" for="vegan">Vegan</label>
-                <InputCheckbox class="form-control" id="vegan" @bind-Value="productModel.IsVegan"/>
+                <label class="form-check-label" for="vegan">Vegan</label>
+                <InputCheckbox class="form-form-check-inline" id="vegan" @bind-Value="productModel.IsVegan"/>
 
-                <label class"form-label" for="glutenfree">Glutenfri</label>
-                <InputCheckbox class="form-control" id="glutenfree" @bind-Value="productModel.IsGlutenfree"/>
+                <label class="form-check-label" for="glutenfree">Glutenfri</label>
+                <InputCheckbox class="form-check-inline" id="glutenfree" @bind-Value="productModel.IsGlutenfree"/>
 
-                <label class"form-label" for="eco">Ekologisk</label>
-                <InputCheckbox class="form-control" id="eco" @bind-Value="productModel.IsEco"/>
+                <label class="form-form-check-label" for="eco">Ekologisk</label>
+                <InputCheckbox class="form-check-inline" id="eco" @bind-Value="productModel.IsEco"/>
 
-                <label class="form-label" for="stock">Lagersaldo</label>
+                <label class="form" for="stock" style="display:block">Lagersaldo</label>
                 <InputNumber class="form-control" id="stock" @bind-Value="productModel.Stock" />
+                <ValidationMessage For="() => productModel.Stock"/>
 
                 <label class="form-label" for="imgPath">Bildsökväg</label>
                 <InputText class="form-control" id="imgPath" @bind-Value="productModel.ImgPath" />
+                <ValidationMessage For="() => productModel.ImgPath"/>
 
         </ModalBody>
         <ModalFooter>

@@ -19,5 +19,16 @@ namespace HakimLivs.Services
             var unit = await _context.Units.ToListAsync();
             return unit;
         }
+
+        public async Task<List<string>> GetUnitNames()
+        {
+            var units = await _context.Units.ToListAsync();
+            var names = new List<string>();
+            foreach (var unit in units)
+            {
+                names.Add(unit.Name.ToString());
+            }
+            return names;
+        }
     }
 }

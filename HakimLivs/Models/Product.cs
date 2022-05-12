@@ -21,7 +21,7 @@ namespace HakimLivs.Models
         public string Brand { get; set; }
 
         [Required(ErrorMessage = "Vänligen ange produktens tillverkare.")]
-        [MaxLength(30, ErrorMessage = "Beskrivningen får inte innehålla fler än 500 tecken."), MinLength(2, ErrorMessage = "Namnet måste innehålla minst 3 tecken.")]
+        [MaxLength(500, ErrorMessage = "Beskrivningen får inte innehålla fler än 500 tecken."), MinLength(2, ErrorMessage = "Namnet måste innehålla minst 3 tecken.")]
         [RegularExpression("^[a-zA-Z0-9 ]*$", ErrorMessage = "Bara bokstäver och siffror är tillåtna värden.")]
         public string Description { get; set; }
 
@@ -32,7 +32,7 @@ namespace HakimLivs.Models
         public Unit Unit { get; set; }
 
         [Required(ErrorMessage = "Vänligen ange produktens innehållsförteckning.")]
-        [MaxLength(30, ErrorMessage = "Beskrivningen får inte innehålla fler än 1000 tecken."), MinLength(2, ErrorMessage = "Namnet måste innehålla minst 3 tecken.")]
+        [MaxLength(1000, ErrorMessage = "Beskrivningen får inte innehålla fler än 1000 tecken."), MinLength(2, ErrorMessage = "Namnet måste innehålla minst 3 tecken.")]
         [RegularExpression("^[a-zA-Z0-9 ]*$", ErrorMessage = "Bara bokstäver och siffror är tillåtna värden.")]
         public string TableOfContent { get; set; }
 

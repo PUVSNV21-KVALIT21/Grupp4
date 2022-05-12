@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HakimLivs.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220512084209_addDataAnnotations")]
-    partial class addDataAnnotations
+    [Migration("20220512095249_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
