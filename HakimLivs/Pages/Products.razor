@@ -4,7 +4,6 @@
 @inject ProtectedLocalStorage ProtectedLocalStorage
 @inject CartState CartState
 @inject ProductService ProductService
-@inject UnitService UnitService
 
 <div class="d-flex justify-content-center flex-wrap gap-2">
 
@@ -26,7 +25,7 @@
                     <div class="mb-1">
                         <span>@p.Brand</span> |
                         <span>@p.UnitQty </span>
-                        <span>@p.Unit</span>
+                        <span>@p.Unit.Name </span>
                     </div>
 
                     <button @onclick="(() => AddToCart(p))" class="btn btn-primary">Lägg till i varukorg</button>
@@ -44,7 +43,6 @@
     [Parameter]
     public string SearchTerm { get; set; }
 
-
     protected override void OnInitialized()
     {
         CartState.OnChange += StateHasChanged;
@@ -60,6 +58,10 @@
     public void Dispose()
     {
         CartState.OnChange -= StateHasChanged;
+    }
+    async Task UpdateProductList()
+    {
+        ProductList = await ProductService.GetProducts();
     }
 
 }

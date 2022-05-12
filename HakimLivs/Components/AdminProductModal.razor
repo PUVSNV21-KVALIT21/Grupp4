@@ -39,9 +39,11 @@
                         <option value="@unit.Id">@unit.Name</option>
                     }
                 </InputSelect>
+                <ValidationMessage For="() => productModel.Unit"/>
 
                 <label class="form-label" for="ToC">Innehållsförteckning</label>
                 <InputText class="form-control" id="ToC" @bind-Value="productModel.TableOfContent" />
+                 <ValidationMessage For="() => productModel.TableOfContent"/>
 
                 <label class="form-label" for="price">Pris</label>
                 <InputNumber class="form-control" id="price" @bind-Value="productModel.Price" />
@@ -55,6 +57,7 @@
                         <option value="@cat.Id">@cat.Name</option>
                     }
                 </InputSelect>
+                <ValidationMessage For="() => productModel.Category"/>
 
                 <label class="form-check-label" for="vegan">Vegan</label>
                 <InputCheckbox class="form-form-check-inline" id="vegan" @bind-Value="productModel.IsVegan"/>

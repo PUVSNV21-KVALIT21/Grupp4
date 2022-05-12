@@ -26,9 +26,12 @@ namespace HakimLivs.Models
         public string Description { get; set; }
 
         [Required]
+        [Range(1, 1000, ErrorMessage = "Värdet får inte vara lägre än 1 eller högre än 1000")]
         public int UnitQty { get; set; }
-        
+
+     
         public int UnitID { get; set; }
+        [Required]
         public Unit Unit { get; set; }
 
         [Required(ErrorMessage = "Vänligen ange produktens innehållsförteckning.")]
@@ -42,6 +45,7 @@ namespace HakimLivs.Models
         public decimal Price { get; set; }
 
         public int CategoryID { get; set; }
+        [Required]
         public Category Category { get; set; }
 
         public bool IsVegan { get; set; }
@@ -51,12 +55,12 @@ namespace HakimLivs.Models
         public bool IsEco { get; set; }
 
         [Required]
-        [Range(0, 100000, ErrorMessage = "Lagersaldot får inte vara lägre än 0 och inte högre än 10 000 produkter")]
+        [Range(0, 10000, ErrorMessage = "Lagersaldot får inte vara lägre än 0 och inte högre än 10 000 produkter")]
         public int Stock { get; set; }
 
         [Required(ErrorMessage = "Vänligen ange sökvägen till produktens bild.")]
-        [MaxLength(30, ErrorMessage = "Beskrivningen får inte innehålla fler än 1000 tecken."), MinLength(2, ErrorMessage = "Namnet måste innehålla minst 3 tecken.")]
-        [RegularExpression("^(?!.*(SQL | sql | [<>{}[])).*", ErrorMessage = "Det ser ut som du försöker skriva in kod. Ajabaja!")]
+        [MaxLength(30, ErrorMessage = "Beskrivningen får inte innehålla fler än 500 tecken."), MinLength(3, ErrorMessage = "Namnet måste innehålla minst 3 tecken.")]
+        [RegularExpression("^(?!.*([<>{}\"\\[\\]])).*$", ErrorMessage = "Det ser ut som du försöker skriva in kod. Ajabaja!")]
         public string ImgPath { get; set; }
     }
 }
