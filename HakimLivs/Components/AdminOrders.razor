@@ -5,6 +5,7 @@
 @inject AdminService AdminService
 @inject OrderService OrderService
 @inject NavigationManager NavigationManager;
+@inject IJSRuntime jsRuntime
 
 
 
@@ -39,7 +40,7 @@
                         <td>@o.DeliveryAdress</td>
                         <td>@o.TotalOrderValue kr</td>
                         <td>
-                            <button class="btn btn-primary" @onclick="NavigateToOrderDetails">
+                            <button class="btn btn-primary" @onclick="@(() => NavigateToNewTab(@o.Id))">
                                 Detaljer
                             </button>
                         </td>
@@ -62,9 +63,17 @@
 
     }
 
-    private void NavigateToOrderDetails()
+    private void NavigateToOrderDetails(int orderId)
     {
-        NavigationManager.NavigateTo("orderdetails");
+        NavigationManager.NavigateTo("orderdetails/" + orderId);
+    }
+
+
+
+    public async Task NavigateToNewTab(int orderId)
+    {
+        string url = "/counter";
+        await jsRuntime.InvokeAsync<object>("open", "orderdetails/" + orderId, "_blank");
     }
 
 

@@ -1,4 +1,4 @@
-﻿@page "/orderdetails/"
+﻿@page "/orderdetails/{orderid}"
 <h3>OrderDetails</h3>
 
 <p>@OrderID</p>
@@ -9,6 +9,6 @@
 
     protected override void OnInitialized()
     {
-        OrderID = OrderID ?? "Kunde ej hitta order-id";
+        OrderID =  OrderID ?? "Kunde ej hitta order-id";
     }
 }
