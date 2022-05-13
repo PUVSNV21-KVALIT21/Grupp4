@@ -20,35 +20,66 @@ namespace HakimLivs.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task SaveOrder(List<BasketProduct> basketProducts, decimal? orderValue)
+        public async Task SaveOrder(List<BasketProduct> basketProducts, decimal? orderValue, string paymentMethod, string discountCode)
         {
+
+           
+            if (discountCode == null || discountCode == "")
+            {
+                discountCode = "none";
+
+            }
+            var basketProductList = new List<BasketProduct>();
+
+
             LoggedInUserID = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
-
+            var user = await _userManager.FindByIdAsync(LoggedInUserID);
             var basket = new Basket();
-
-            var discount = _context.Discounts.Where(d => d.Code == "none").FirstOrDefault();
-            var test = _context.Discounts.Any();
-            var test2 = _context.Products.Any();
+            var discount = _context.Discounts.Where(d => d.Code == discountCode).FirstOrDefault();
 
             basket.Discount = discount;
             basket.UserID = LoggedInUserID;
-            basketProducts.ForEach(bp => bp.Basket = basket);
+            basket.User = user;
 
+
+
+            foreach (var item in basketProducts)
+            {
+                var product = _context.Products.Where(p => p.Id == item.Product.Id);
+                _context.Units.
+                item.Product = item.Product;
+                basketProductList.Add(item);
+            }
+            basketProductList.ForEach(bp => bp.Basket = basket);
+            await _context.BasketProducts.AddRangeAsync(basketProducts);
             var order = new Order
             {
                 Basket = basket,
-                DeliveryAdress = "Testadress 1, 503 80, Borås",
+                DeliveryAdress = basket.User.Address,
                 DeliveryMethod = "PostNord",
                 Orderdate = DateTime.Now,
-                PaymentMethod = "VISA",
-                TotalOrderValue = (decimal)orderValue * (basket.Discount.Percentage / 100),
+                PaymentMethod = paymentMethod,
+                TotalOrderValue = (decimal)orderValue             
                
             };
-            await _context.BasketProducts.AddRangeAsync(basketProducts);
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
 
 
+        }
+
+        public async Task<bool> CheckDiscount(string discountCode)
+        {
+            var discount = _context.Discounts.Where(d => d.Code == discountCode).Any();
+            return discount;
+        }
+        public async Task<decimal?> ApplyDiscount(string discountCode, decimal? orderValue)
+        {
+            var discount = _context.Discounts.Where(d => d.Code == discountCode).FirstOrDefault();
+
+            var discountCalc = orderValue * ((decimal)discount.Percentage / 100);
+            var newOrderValue = orderValue - discountCalc;
+            return newOrderValue;
         }
 
 

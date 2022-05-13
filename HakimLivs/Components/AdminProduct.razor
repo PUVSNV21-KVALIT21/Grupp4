@@ -29,8 +29,8 @@
                 <th scope="col">Namn</th>
                 <th scope="col">Märke/Tillverkare</th>
                 <th scope="col">Beskrivning</th>
+                <th scope="col">Mängd</th>
                 <th scope="col">Enhet</th>
-                <th scope="col">Enhetstyp</th>
                 <th scope="col">Innehållsförteckning</th>
                 <th scope="col">Pris</th>
                 <th scope="col">Kategori</th>
@@ -45,8 +45,8 @@
                     <td>@p.Name</td>
                     <td>@p.Brand</td>
                     <td class="text-truncate" style="max-width: 150px;">@p.Description</td>
-                    <td>@p.Unit</td>
-                    <td>@p.UnitType</td>
+                    <td>@p.UnitQty</td>
+                    <td>@p.Unit.Name</td>
                     <td class="text-truncate" style="max-width: 150px;">@p.TableOfContent</td>
                     <td>@p.Price kr</td>
                     <td>@p.Category.Name</td>

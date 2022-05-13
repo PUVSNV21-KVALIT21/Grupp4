@@ -24,8 +24,8 @@
                     </p>
                     <div class="mb-1">
                         <span>@p.Brand</span> |
-                        <span>@p.Unit </span>
-                        <span>@p.UnitType</span>
+                        <span>@p.UnitQty </span>
+                        <span>@p.Unit.Name </span>
                     </div>
 
                     <button @onclick="(() => AddToCart(p))" class="btn btn-primary">Lägg till i varukorg</button>
@@ -43,7 +43,6 @@
     [Parameter]
     public string SearchTerm { get; set; }
 
-
     protected override void OnInitialized()
     {
         CartState.OnChange += StateHasChanged;
@@ -59,6 +58,10 @@
     public void Dispose()
     {
         CartState.OnChange -= StateHasChanged;
+    }
+    async Task UpdateProductList()
+    {
+        ProductList = await ProductService.GetProducts();
     }
 
 }

@@ -19,9 +19,5 @@ namespace HakimLivs.Services
             var category = await _context.Categories.ToListAsync();
             return category;
         }
-        
-
-
-
     }
 }
