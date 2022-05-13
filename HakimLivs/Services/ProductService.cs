@@ -15,7 +15,7 @@ namespace HakimLivs.Services
 
         public async Task<List<Product>> GetProducts()
         {
-            var products = await _context.Products.AsNoTracking().Include(p => p.Unit).Include(p => p.Category).ToListAsync();
+            var products = await _context.Products.Include(p => p.Unit).Include(p => p.Category).ToListAsync();
             return products;
         }
 
