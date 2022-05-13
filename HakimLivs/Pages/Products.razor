@@ -5,6 +5,8 @@
 @inject CartState CartState
 @inject ProductService ProductService
 
+
+
 <div class="d-flex justify-content-center flex-wrap gap-2">
 
     @if (ProductList == null)
@@ -15,23 +17,30 @@
     {
         @foreach (var p in ProductList)
         {
-            <div class="product-card card text-center m-1" style="width: 15rem;">
-                <div class="card-body">
-                    <img src="@p.ImgPath" class="img" alt="@p.Name" width="200" height="200" style="object-fit:contain" />
-                    <p>@p.Price kr/st</p>
-                    <p class="card-title">
-                        @p.Name
-                    </p>
-                    <div class="mb-1">
-                        <span>@p.Brand</span> |
-                        <span>@p.UnitQty </span>
-                        <span>@p.Unit.Name </span>
+
+            string hover = "Beskrivning: " + @p.Description + "<br />" + " Innehåll: " + @p.TableOfContent;
+
+            <Div ElementId="tooltip-custom-target">
+                <Tooltip Text=@hover> 
+                    <div class="product-card card text-center m-1" style="width: 15rem;">
+                        <div class="card-body">
+                            <img src="@p.ImgPath" class="img" alt="@p.Name" width="200" height="200" style="object-fit:contain" />
+                            <p>@p.Price kr/st</p>
+                            <p class="card-title">
+                                @p.Name
+                            </p>
+                            <div class="mb-1">
+                                <span>@p.Brand</span> |
+                                <span>@p.UnitQty </span>
+                                <span>@p.Unit.Name </span>
+                            </div>
+
+                            <button @onclick="(() => AddToCart(p))" class="btn btn-primary">Lägg till i varukorg</button>
+
+                        </div>
                     </div>
-
-                    <button @onclick="(() => AddToCart(p))" class="btn btn-primary">Lägg till i varukorg</button>
-
-                </div>
-            </div>
+                </Tooltip>
+            </Div>
         }
     }
 </div>
