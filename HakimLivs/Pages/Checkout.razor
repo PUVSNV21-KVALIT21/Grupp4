@@ -2,12 +2,14 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedLocalStorage ProtectedLocalStorage
 @inject CartState CartState
+@inject OrderService OrderService
 @implements IDisposable
 
 <h3>Kassa</h3>
 
 
 <h4>Varor:</h4>
+
 <div>
     @foreach (var p in CartState.selectedProducts)
     {
@@ -27,8 +29,19 @@
         </div>
     }
 </div>
+<label for="discountCode">Rabattkod</label>
+<input class="form-control-sm" name="discountCode" type="text" @bind-value="@discountCode" />
+<button type="button" class="btn btn-secondary" @onclick="(() => CheckDiscount(discountCode))">Aktivera</button>
 
-<strong>@CartState.totalPrice kr</strong>
+<p>@discountStatus</p>
+
+<div>
+    <p>Pris totalt: @CartState.totalPrice kr</p>
+    @if (isDiscountCodeValid)
+    {
+        <p>Rabatterat pris @discountPrice kr</p>
+    }
+</div>
 
 <RadioGroup TValue="string" Name="colors" @bind-CheckedValue="@checkedValue">
     <Radio Value="@("invoice")">Faktura</Radio>
@@ -61,12 +74,12 @@
 
             @if (checkedValue == "invoice")
             {
-                <p>Vi skickar en faktura på @CartState.totalPrice kr till dig</p>
+                <p>Vi skickar en faktura på @orderPrice kr till dig</p>
             }
 
             @if (checkedValue == "creditcard")
             {
-                <p>Vi har debiterat @CartState.totalPrice kr från ditt kort </p>
+                <p>Vi har debiterat @orderPrice kr från ditt kort </p>
             }
 
 
@@ -85,16 +98,45 @@
 
 @code {
     private string checkedValue = "invoice";
+    private string discountCode;
+    private bool isDiscountCodeValid;
+    private string discountStatus = "";
+    private decimal? discountPrice;
+
+    private decimal? orderPrice;
 
     private bool orderButtonDisabled = false;
 
-    private bool modalVisible; 
+    private bool modalVisible;
 
-    private Task ShowModal()
+    private async Task ShowModal()
     {
+        await SaveOrder();
         modalVisible = true;
 
-        return Task.CompletedTask;
+        await Task.CompletedTask;
+    }
+    async Task SaveOrder()
+    {
+        orderPrice = isDiscountCodeValid ? discountPrice : CartState.totalPrice;
+        await OrderService.SaveOrder(CartState.selectedProducts, orderPrice, checkedValue, discountCode);
+    }
+
+    async Task CheckDiscount(string discountCode)
+    {
+        isDiscountCodeValid = await OrderService.CheckDiscount(discountCode);
+        discountStatus = isDiscountCodeValid ? "Rabattkod aktiverad" : "Rabattkod ogiltig";
+        if (isDiscountCodeValid)
+        {
+            ApplyDiscount();
+        }
+
+    }
+
+    async Task ApplyDiscount()
+    {
+        discountPrice = await OrderService.ApplyDiscount(discountCode, CartState.totalPrice);
+        orderPrice = discountPrice;
     }
 
     private Task HideModal()
