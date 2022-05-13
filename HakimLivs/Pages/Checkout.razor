@@ -118,8 +118,7 @@
     }
     async Task SaveOrder()
     {
-        orderPrice = CartState.totalPrice;
-
+        orderPrice = isDiscountCodeValid ? discountPrice : CartState.totalPrice;
         await OrderService.SaveOrder(CartState.selectedProducts, orderPrice, checkedValue, discountCode);
     }
 

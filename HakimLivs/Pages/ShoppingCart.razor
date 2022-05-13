@@ -120,13 +120,20 @@
     {
         if (firstRender)
         {
-            var productsInCart = await ProtectedLocalStorage.GetAsync<List<BasketProduct>>("productsInCart");
-            var products = productsInCart.Success ? productsInCart.Value.ToList() : null; 
-            var totalPriceInCart = await ProtectedLocalStorage.GetAsync<decimal>("totalPrice");
-            var totalprice = totalPriceInCart.Success ? totalPriceInCart.Value : 0; 
+            var productsInStorage = await ProtectedLocalStorage.GetAsync<List<BasketProduct>>("productsInCart");
+            var products = productsInStorage.Success ? productsInStorage.Value.ToList() : null; 
+            var totalPriceInStorage = await ProtectedLocalStorage.GetAsync<decimal>("totalPrice");
+            var totalprice = totalPriceInStorage.Success ? totalPriceInStorage.Value : 0;
+
+            var bpList = new List<BasketProduct>();
             if (products != null && totalprice != 0)
             {
-                CartState.selectedProducts = products;
+                foreach (var item in products)
+                {
+                    var product = await ProductService.GetProduct(item.Product.Id);
+                    bpList.Add( new BasketProduct { Product = product, ProductQuantity = item.ProductQuantity });
+                }
+                CartState.selectedProducts = bpList;
                 CartState.totalPrice = totalprice;
                 CartState.NotifyStateChanged();
             }

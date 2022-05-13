@@ -1,6 +1,7 @@
 ﻿using HakimLivs.Data;
 using HakimLivs.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace HakimLivs.Services
 {
@@ -45,8 +46,7 @@ namespace HakimLivs.Services
 
             foreach (var item in basketProducts)
             {
-                var product = _context.Products.Where(p => p.Id == item.Product.Id);
-                _context.Units.
+                var product = _context.Products.AsNoTracking().Where(p => p.Id == item.Product.Id);
                 item.Product = item.Product;
                 basketProductList.Add(item);
             }
