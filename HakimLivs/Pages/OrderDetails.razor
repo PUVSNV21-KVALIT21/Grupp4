@@ -1,0 +1,14 @@
+﻿@page "/orderdetails/"
+<h3>OrderDetails</h3>
+
+<p>@OrderID</p>
+
+@code {
+     [Parameter]
+    public string? OrderID { get; set; }
+
+    protected override void OnInitialized()
+    {
+        OrderID = OrderID ?? "Kunde ej hitta order-id";
+    }
+}

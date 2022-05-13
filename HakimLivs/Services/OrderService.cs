@@ -21,10 +21,16 @@ namespace HakimLivs.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
+        public async Task<List<Order>> GetOrder()
+        {
+            var orderList = await _context.Orders.Include(o => o.Basket).ThenInclude(b=> b.Discount).ToListAsync();
+            return orderList;
+        }
+
         public async Task SaveOrder(List<BasketProduct> basketProducts, decimal? orderValue, string paymentMethod, string discountCode)
         {
 
-           
+
             if (discountCode == null || discountCode == "")
             {
                 discountCode = "none";
@@ -59,8 +65,8 @@ namespace HakimLivs.Services
                 DeliveryMethod = "PostNord",
                 Orderdate = DateTime.Now,
                 PaymentMethod = paymentMethod,
-                TotalOrderValue = (decimal)orderValue             
-               
+                TotalOrderValue = (decimal)orderValue
+
             };
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
