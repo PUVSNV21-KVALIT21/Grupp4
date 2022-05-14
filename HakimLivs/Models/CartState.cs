@@ -5,13 +5,13 @@ namespace HakimLivs.Models
 {
     public class CartState
     {
-       
+
         public List<BasketProduct>? selectedProducts = new List<BasketProduct>();
 
         public decimal? totalPrice { get; set; } = 0;
         public event Action OnChange;
 
-        
+
 
         public async Task AddProduct(Product product)
         {
@@ -19,32 +19,38 @@ namespace HakimLivs.Models
 
             var isAlreadyInBasket = selectedProducts.Where(bp => bp.Product == product).SingleOrDefault(new BasketProduct());
 
-            if (isAlreadyInBasket.Product != null)
+            if (isAlreadyInBasket.Product != null && product.Stock > isAlreadyInBasket.ProductQuantity)
             {
                 isAlreadyInBasket.ProductQuantity++;
+                totalPrice = totalPrice + product.Price;
+
             }
-            else
+            else if (product.Stock > 0 && isAlreadyInBasket.Product == null)
             {
                 isAlreadyInBasket.Product = product;
                 isAlreadyInBasket.ProductQuantity = 1;
                 selectedProducts.Add(isAlreadyInBasket);
+                totalPrice = totalPrice + product.Price;
+
             }
 
-            totalPrice = totalPrice + product.Price;
-            
+
             NotifyStateChanged();
         }
 
-       
+
 
         public async Task AddProductQuantity(BasketProduct basketProduct)
         {
-            var product = selectedProducts.IndexOf(basketProduct);
+            var productIndex = selectedProducts.IndexOf(basketProduct);
+            if (selectedProducts[productIndex].Product.Stock > basketProduct.ProductQuantity)
+            {
 
-            selectedProducts[product].ProductQuantity++;
-            totalPrice = totalPrice + selectedProducts[product].Product.Price;
+            selectedProducts[productIndex].ProductQuantity++;
+            totalPrice = totalPrice + selectedProducts[productIndex].Product.Price;
 
             NotifyStateChanged();
+            }
         }
         public async Task SubtractProductQuantity(BasketProduct basketProduct)
         {
@@ -73,6 +79,7 @@ namespace HakimLivs.Models
             NotifyStateChanged();
 
         }
+
 
         public void NotifyStateChanged() => OnChange?.Invoke();
 
