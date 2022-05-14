@@ -1,4 +1,6 @@
-﻿namespace HakimLivs.Models
+﻿using HakimLivs.Data;
+
+namespace HakimLivs.Models
 {
     public class Order
     {
@@ -9,5 +11,6 @@
         public string DeliveryMethod { get; set; }
         public string DeliveryAdress { get; set; }
         public decimal TotalOrderValue { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }

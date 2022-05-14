@@ -8,6 +8,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject AdminService AdminService
 @inject ProductService ProductService
+@inject OrderService OrderService
 
 <AuthorizeView Roles="Administrators">
     <Authorized>
@@ -27,7 +28,7 @@
         }
          @if (showOrders)
         {
-            <AdminOrders></AdminOrders>
+            <AdminOrders ordersList="@ordersList"></AdminOrders>
 
         }
 
@@ -41,6 +42,7 @@
 @code {
 
     private List<Product> ProductList;
+    private List<Order> ordersList;
 
     bool showProducts = false;
     bool showUsers = false;
@@ -62,11 +64,12 @@
                 showProducts = false;
                 showOrders = false;
                 break;
-                case "ShowOrders":
+            case "ShowOrders":
                 showOrders = !showOrders;
                 showProducts = false;
                 showUsers = false;
                 break;
+
         }
     }
 
@@ -86,6 +89,7 @@
     protected override async Task OnInitializedAsync()
     {
         ProductList = await ProductService.GetProducts();
+        ordersList = await OrderService.GetAllOrdersAsync();
 
         // ensure there is a ADMINISTRATION_ROLE
         var RoleResult = await _RoleManager.FindByNameAsync(ADMINISTRATION_ROLE);

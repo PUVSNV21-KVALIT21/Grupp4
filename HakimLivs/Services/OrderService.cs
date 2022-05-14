@@ -27,6 +27,11 @@ namespace HakimLivs.Services
             return orderList;
         }
 
+        public async Task<List<Order>> GetAllOrdersAsync()
+        {
+            var listOfOrders = await _context.Orders.Include(o => o.ApplicationUser).ToListAsync();
+            return listOfOrders;
+        }
         public async Task SaveOrder(List<BasketProduct> basketProducts, decimal? orderValue, string paymentMethod, string discountCode)
         {
 

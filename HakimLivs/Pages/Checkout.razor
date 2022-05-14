@@ -13,7 +13,9 @@
 <div>
     @foreach (var p in CartState.selectedProducts)
     {
-        <div class="d-flex justify-content-between m-2">
+        if(p.Product != null)
+        {
+            <div class="d-flex justify-content-between m-2">
 
             <span>
                 @p.Product.Name
@@ -27,6 +29,8 @@
                 <button class="btn btn-primary" @onclick="(() => AddProductQuantity(p))">+</button>
             </span>
         </div>
+        }
+        
     }
 </div>
 <label for="discountCode">Rabattkod</label>
