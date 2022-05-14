@@ -11,6 +11,7 @@ namespace HakimLivs.Models
         public string DeliveryMethod { get; set; }
         public string DeliveryAdress { get; set; }
         public decimal TotalOrderValue { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
+
+        //public ApplicationUser ApplicationUser { get; set; }
     }
 }

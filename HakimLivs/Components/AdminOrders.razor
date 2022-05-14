@@ -23,6 +23,7 @@
             <thead>
                 <tr>
                     <th scope="col">Order ID</th>
+                    <th scope="col">Användarnamn</th>
                     <th scope="col">Orderdatum</th>
                     <th scope="col">Leverantör</th>
                     <th scope="col">Leveransadress</th>
@@ -35,6 +36,7 @@
                 {
                     <tr>
                         <td>@o.Id</td>
+                        <td>@o.Basket.User</td>
                         <td>@o.Orderdate.ToShortDateString()</td>
                         <td>@o.DeliveryMethod</td>
                         <td>@o.DeliveryAdress</td>
@@ -59,7 +61,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        OrderList = await OrderService.GetOrder();
+        OrderList = await OrderService.GetOrders();
 
     }
 

@@ -28,7 +28,7 @@
         }
          @if (showOrders)
         {
-            <AdminOrders ordersList="@ordersList"></AdminOrders>
+            <AdminOrders></AdminOrders>
 
         }
 
@@ -42,7 +42,6 @@
 @code {
 
     private List<Product> ProductList;
-    private List<Order> ordersList;
 
     bool showProducts = false;
     bool showUsers = false;
@@ -89,7 +88,7 @@
     protected override async Task OnInitializedAsync()
     {
         ProductList = await ProductService.GetProducts();
-        ordersList = await OrderService.GetAllOrdersAsync();
+        //ordersList = await OrderService.GetAllOrdersAsync();
 
         // ensure there is a ADMINISTRATION_ROLE
         var RoleResult = await _RoleManager.FindByNameAsync(ADMINISTRATION_ROLE);

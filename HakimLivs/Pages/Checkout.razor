@@ -48,8 +48,8 @@
 </div>
 
 <RadioGroup TValue="string" Name="colors" @bind-CheckedValue="@checkedValue">
-    <Radio Value="@("invoice")">Faktura</Radio>
-    <Radio Value="@("creditcard")">VISA/Mastercard</Radio>
+    <Radio Value="@("Faktura")">Faktura</Radio>
+    <Radio Value="@("VISA/Mastercard")">VISA/Mastercard</Radio>
 </RadioGroup>
 
 
@@ -76,12 +76,12 @@
 
             </h4>
 
-            @if (checkedValue == "invoice")
+            @if (checkedValue == "Faktura")
             {
                 <p>Vi skickar en faktura på @orderPrice kr till dig</p>
             }
 
-            @if (checkedValue == "creditcard")
+            @if (checkedValue == "VISA/Mastercard")
             {
                 <p>Vi har debiterat @orderPrice kr från ditt kort </p>
             }
@@ -101,7 +101,7 @@
 
 
 @code {
-    private string checkedValue = "invoice";
+    private string checkedValue = "Faktura";
     private string discountCode;
     private bool isDiscountCodeValid;
     private string discountStatus = "";

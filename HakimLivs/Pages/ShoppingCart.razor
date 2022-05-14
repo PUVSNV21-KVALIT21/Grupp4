@@ -9,7 +9,7 @@
 
 <div class="d-flex gap-3 border-1">
 
-    @if (CartState.selectedProducts.Count != 0 ||CartState.selectedProducts != null)
+    @if (CartState.selectedProducts.Count != 0)
     {
 
         <Button Color="Color.Primary" Clicked="@ShowModal">Varukorg <span>@CartState.totalPrice kr</span></Button>
