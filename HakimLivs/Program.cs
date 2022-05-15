@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
-using Microsoft.AspNet.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
