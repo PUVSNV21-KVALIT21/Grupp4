@@ -40,7 +40,7 @@ namespace HakimLivs.Models
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
-        [Range(1.00, 1000.00, ErrorMessage = "Priset får inte vara lägre än 1kr och inte högre än 1000kr")]
+        [Range(1.00, 1000.00, ErrorMessage = "Priset får inte vara lägregit än 1kr och inte högre än 1000kr")]
         public decimal Price { get; set; }
 
         [Required]
