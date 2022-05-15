@@ -65,13 +65,13 @@ namespace HakimLivs.Services
             var basketProductList = new List<BasketProduct>();
 
 
-            //LoggedInUserID = _userManager.GetUserName(_httpContextAccessor.HttpContext.User);
+            //LoggedInUserID =  _userManager.GetUserName(_httpContextAccessor.HttpContext.User);
             var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
             var basket = new Basket();
             var discount = _context.Discounts.Where(d => d.Code == discountCode).FirstOrDefault();
 
             basket.Discount = discount;
-            basket.UserID = LoggedInUserID;
+            basket.UserID = user.Id;
             basket.User = user;
 
 
