@@ -13,6 +13,13 @@ namespace HakimLivs.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+        public class OrderDetails
+        {
+            public Order Order { get; set; }
+            public Basket Basket { get; set; }
+            public Discount Discount { get; set; }
+            public List<BasketProduct> BasketProducts { get; set; }
+        }
 
         public OrderService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
@@ -21,10 +28,35 @@ namespace HakimLivs.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
+        public async Task<List<Order>> GetOrders()
+        {
+            var orderList = await _context.Orders.Include(o => o.Basket).ThenInclude(b => b.Discount).ToListAsync();
+            return orderList;
+        }
+        public async Task<OrderDetails> GetOrder(int id)
+        {
+            var order = await _context.Orders.Where(o => o.Id == id).Include(o => o.Basket).ThenInclude(b => b.User).Include(b => b.Basket).ThenInclude(b => b.Discount).SingleAsync();
+            var basketProducts = await _context.BasketProducts.Where(bp => bp.Basket.Id == order.Basket.Id).Include(bp => bp.Product).ToListAsync();
+            var orderDetails = new OrderDetails
+            {
+                Order = order,
+                Basket = order.Basket,
+                Discount = order.Basket.Discount,
+                BasketProducts = basketProducts
+            };
+
+            return orderDetails;
+        }
+
+        //public async Task<List<Order>> GetAllOrdersAsync()
+        //{
+        //    var listOfOrders = await _context.Orders.Include(o => o.ApplicationUser).ToListAsync();
+        //    return listOfOrders;
+        //}
         public async Task SaveOrder(List<BasketProduct> basketProducts, decimal? orderValue, string paymentMethod, string discountCode)
         {
 
-           
+
             if (discountCode == null || discountCode == "")
             {
                 discountCode = "none";
@@ -43,11 +75,10 @@ namespace HakimLivs.Services
             basket.User = user;
 
 
-
             foreach (var item in basketProducts)
             {
                 var product = _context.Products.AsNoTracking().Where(p => p.Id == item.Product.Id);
-                item.Product = item.Product;
+                //item.Product = item.Product;
                 basketProductList.Add(item);
             }
             basketProductList.ForEach(bp => bp.Basket = basket);
@@ -59,8 +90,8 @@ namespace HakimLivs.Services
                 DeliveryMethod = "PostNord",
                 Orderdate = DateTime.Now,
                 PaymentMethod = paymentMethod,
-                TotalOrderValue = (decimal)orderValue             
-               
+                TotalOrderValue = (decimal)orderValue
+
             };
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();

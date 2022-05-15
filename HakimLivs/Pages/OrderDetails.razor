@@ -1,0 +1,114 @@
+﻿@page "/orderdetails/{orderid}"
+@layout EmptyLayout
+@inject OrderService OrderService
+@if (orderDetails != null)
+{
+
+    <div class="m-4" style="width:">
+        <img src="./Images/hakimlivs-logo.png" width="300" class="mb-3">
+        <h2>
+            Orderbekräftelse
+        </h2>
+
+        <Divider></Divider>
+
+        <div class="d-flex justify-content-evenly">
+
+            <div class="mt-5">
+                <h5>Leveransadress</h5>
+                <p>@orderDetails.Order.Basket.User.firstName @orderDetails.Order.Basket.User.lastName</p>
+
+                <p>@orderDetails.Order.DeliveryAdress</p>
+            </div>
+
+            <div class="mt-5">
+                <h5>Leverantörsadress</h5>
+                <p>Hakim Livs</p>
+                <p>Hakims väg 1337</p>
+                <p>123 45 Handla</p>
+                <p>Sverige</p>
+            </div>
+        </div>
+
+        <div class="d-flex gap-5">
+
+            <div>
+                <p>Orderdatum:</p>
+                <p>Leveranssätt:</p>
+                <p>Betalningssätt:</p>
+            </div>
+            <div>
+                <p>@orderDetails.Order.Orderdate.ToShortDateString()</p>
+                <p>@orderDetails.Order.DeliveryMethod</p>
+                <p>@orderDetails.Order.PaymentMethod</p>
+            </div>
+
+        </div>
+
+        <table class="table ">
+            <thead>
+                <tr>
+                    <th scope="col">Produkt</th>
+                    <th scope="col">Antal</th>
+                    <th scope="col">á pris</th>
+                    <th scope="col">Belopp</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in orderDetails.BasketProducts)
+                {
+
+                    <tr>
+                        <td>@product.Product.Name</td>
+                        <td>@product.ProductQuantity</td>
+                        <td>@product.Product.Price kr</td>
+                        <td>@CalcTotalProductPrice(@product.Product.Price, @product.ProductQuantity)</td>
+                    </tr>
+
+                }
+
+
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-end gap-5 mt-5">
+
+            <div>
+                <p>Rabattkod:</p>
+                <p>Rabatt:</p>
+                <strong>Totalbelopp:</strong>
+            </div>
+            <div>
+                <p>@orderDetails.Basket.Discount.Code (@orderDetails.Basket.Discount.Percentage%)</p>
+                <p>@CalcDiscount() kr</p>
+                <strong>@orderDetails.Order.TotalOrderValue kr</strong>
+            </div>
+        </div>
+    </div>
+
+
+}
+
+@code {
+    [Parameter]
+    public string? OrderID { get; set; }
+
+    private OrderService.OrderDetails orderDetails;
+
+    protected override async Task OnInitializedAsync()
+    {
+        orderDetails = await OrderService.GetOrder(int.Parse(OrderID));
+    }
+
+    decimal CalcTotalProductPrice(decimal productPrice, int productQuantity)
+    {
+        return productQuantity * productPrice;
+    }
+    decimal CalcDiscount()
+    {
+        var discount = orderDetails.Order.TotalOrderValue * ((decimal)orderDetails.Basket.Discount.Percentage / 100);
+        return discount;
+    }
+   
+
+
+}

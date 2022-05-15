@@ -1,0 +1,82 @@
+﻿@using HakimLivs.Models
+@using HakimLivs.Services
+@using HakimLivs.Components
+@inject ProductService ProductService
+@inject AdminService AdminService
+@inject OrderService OrderService
+@inject NavigationManager NavigationManager;
+@inject IJSRuntime jsRuntime
+
+
+
+<div>
+
+    @if (OrderList == null)
+    {
+        <p>
+            <em>Loading...</em>
+        </p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Användarnamn</th>
+                    <th scope="col">Orderdatum</th>
+                    <th scope="col">Leverantör</th>
+                    <th scope="col">Leveransadress</th>
+                    <th scope="col">Ordervärde</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var o in OrderList)
+                {
+                    <tr>
+                        <td>@o.Id</td>
+                        <td>@o.Basket.User</td>
+                        <td>@o.Orderdate.ToShortDateString()</td>
+                        <td>@o.DeliveryMethod</td>
+                        <td>@o.DeliveryAdress</td>
+                        <td>@o.TotalOrderValue kr</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="@(() => NavigateToNewTab(@o.Id))">
+                                Detaljer
+                            </button>
+                        </td>
+                    </tr>
+
+                }
+
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+
+    public List<Order> OrderList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        OrderList = await OrderService.GetOrders();
+
+    }
+
+    private void NavigateToOrderDetails(int orderId)
+    {
+        NavigationManager.NavigateTo("orderdetails/" + orderId);
+    }
+
+
+
+    public async Task NavigateToNewTab(int orderId)
+    {
+        string url = "/counter";
+        await jsRuntime.InvokeAsync<object>("open", "orderdetails/" + orderId, "_blank");
+    }
+
+
+}

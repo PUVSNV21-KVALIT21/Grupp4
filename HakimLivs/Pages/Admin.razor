@@ -8,12 +8,14 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject AdminService AdminService
 @inject ProductService ProductService
+@inject OrderService OrderService
 
 <AuthorizeView Roles="Administrators">
     <Authorized>
 
         <button class="btn btn-primary" @onclick='(() => ShowStuff("ShowProducts"))'>Produkter</button>
         <button class="btn btn-primary" @onclick='(() => ShowStuff("ShowUsers"))'>Användare</button>
+        <button class="btn btn-primary" @onclick='(() => ShowStuff("ShowOrders"))'>Ordrar</button>
 
         @if (showProducts)
         {
@@ -22,6 +24,11 @@
         @if (showUsers)
         {
             <AdminUsers ColUsers="@ColUsers"></AdminUsers>
+
+        }
+         @if (showOrders)
+        {
+            <AdminOrders></AdminOrders>
 
         }
 
@@ -38,9 +45,7 @@
 
     bool showProducts = false;
     bool showUsers = false;
-
-
-
+    bool showOrders = false;
 
 
     void ShowStuff(string text)
@@ -50,11 +55,20 @@
             case "ShowProducts":
                 showProducts = !showProducts;
                 showUsers = false;
+                showOrders = false;
+
                 break;
             case "ShowUsers":
                 showUsers = !showUsers;
                 showProducts = false;
+                showOrders = false;
                 break;
+            case "ShowOrders":
+                showOrders = !showOrders;
+                showProducts = false;
+                showUsers = false;
+                break;
+
         }
     }
 
@@ -74,6 +88,7 @@
     protected override async Task OnInitializedAsync()
     {
         ProductList = await ProductService.GetProducts();
+        //ordersList = await OrderService.GetAllOrdersAsync();
 
         // ensure there is a ADMINISTRATION_ROLE
         var RoleResult = await _RoleManager.FindByNameAsync(ADMINISTRATION_ROLE);

@@ -34,7 +34,9 @@
 
                         @foreach (var p in CartState.selectedProducts)
                         {
-                            <div class="d-flex justify-content-between m-2">
+                            if(p.Product != null)
+                            {
+                                <div class="d-flex justify-content-between m-2">
 
                                 <span>
                                     @p.Product.Name
@@ -48,6 +50,7 @@
                                     <button class="btn btn-primary" @onclick="(() => AddProductQuantity(p))">+</button>
                                 </span>
                             </div>
+                            }
 
                         }
                         <p style="text-align:right; font-weight:bold;">@CartState.totalPrice kr</p>
@@ -80,16 +83,25 @@
 
     private async Task AddProductQuantity(BasketProduct basketProduct)
     {
-        CartState.AddProductQuantity(basketProduct);
-        await ProtectedLocalStorage.SetAsync("productsInCart", CartState.selectedProducts);
-        await ProtectedLocalStorage.SetAsync("totalPrice", CartState.totalPrice);
+        ProductList = await ProductService.GetProducts();
+        if(ProductList != null || ProductList.Count() != 0)
+        {
+            CartState.AddProductQuantity(basketProduct);
+            await ProtectedLocalStorage.SetAsync("productsInCart", CartState.selectedProducts);
+            await ProtectedLocalStorage.SetAsync("totalPrice", CartState.totalPrice);
+        }
+
     }
 
     private async Task SubtractProductQuantity(BasketProduct basketProduct)
     {
-        await CartState.SubtractProductQuantity(basketProduct);
-        await ProtectedLocalStorage.SetAsync("productsInCart", CartState.selectedProducts);
-        await ProtectedLocalStorage.SetAsync("totalPrice", CartState.totalPrice);
+        ProductList = await ProductService.GetProducts();
+        if (ProductList != null || ProductList.Count() != 0)
+        {
+            await CartState.SubtractProductQuantity(basketProduct);
+            await ProtectedLocalStorage.SetAsync("productsInCart", CartState.selectedProducts);
+            await ProtectedLocalStorage.SetAsync("totalPrice", CartState.totalPrice);
+        }
     }
 
     private Task ShowModal()
@@ -121,7 +133,7 @@
         if (firstRender)
         {
             var productsInStorage = await ProtectedLocalStorage.GetAsync<List<BasketProduct>>("productsInCart");
-            var products = productsInStorage.Success ? productsInStorage.Value.ToList() : null; 
+            var products = productsInStorage.Success ? productsInStorage.Value.ToList() : null;
             var totalPriceInStorage = await ProtectedLocalStorage.GetAsync<decimal>("totalPrice");
             var totalprice = totalPriceInStorage.Success ? totalPriceInStorage.Value : 0;
 
@@ -131,23 +143,14 @@
                 foreach (var item in products)
                 {
                     var product = await ProductService.GetProduct(item.Product.Id);
-                    bpList.Add( new BasketProduct { Product = product, ProductQuantity = item.ProductQuantity });
+                    bpList.Add(new BasketProduct { Product = product, ProductQuantity = item.ProductQuantity });
                 }
                 CartState.selectedProducts = bpList;
                 CartState.totalPrice = totalprice;
                 CartState.NotifyStateChanged();
             }
+        }
     }
 }
 
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    var result = await ProtectedLocalStorage.GetAsync<List<BasketProduct>>("product");
-    //    var basketProducts = result.Success ? result.Value.ToList() : null;       
-    //    if (basketProducts != null)
-    //    {
-    //        ProductList = basketProducts.Select(bp => bp.Product).ToList();
-    //    }
-        
-    //}
-}
+
