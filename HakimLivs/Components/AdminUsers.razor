@@ -47,7 +47,7 @@
     {
     }
     async Task DeleteUser(ApplicationUser user)
-    {
+     {
         await UserService.DeleteUser(user);
          await UpdateUserList();
     }
