@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using Microsoft.AspNet.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ builder.Services.AddTransient<UnitService>();
 builder.Services.AddTransient<CategoryService>();
 builder.Services.AddTransient<AdminService>();
 builder.Services.AddTransient<OrderService>();
+builder.Services.AddTransient<UserService>();
 builder.Services.AddScoped<CartState>();
 builder.Services
     .AddBlazorise(options =>
