@@ -3,6 +3,7 @@
 @inject ProtectedLocalStorage ProtectedLocalStorage
 @inject CartState CartState
 @inject OrderService OrderService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @implements IDisposable
 
 <h3>Kassa</h3>
@@ -122,8 +123,10 @@
     }
     async Task SaveOrder()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
         orderPrice = isDiscountCodeValid ? discountPrice : CartState.totalPrice;
-        await OrderService.SaveOrder(CartState.selectedProducts, orderPrice, checkedValue, discountCode);
+        await OrderService.SaveOrder(CartState.selectedProducts, orderPrice, checkedValue, discountCode, user);
     }
 
     async Task CheckDiscount(string discountCode)
