@@ -1,4 +1,5 @@
 ﻿@inject CategoryService CategoryService
+@inject UnitService UnitService
 @inject ProductService ProductService
 @inject NavigationManager NavigationManager;
 
@@ -7,31 +8,46 @@
 <Modal @ref="modalRef">
     <ModalContent Centered>
             <EditForm Model="@productModel" OnValidSubmit="@SaveProduct">
+                <DataAnnotationsValidator/>
         <ModalHeader>
             <ModalTitle>@ModalTitle</ModalTitle>
             <CloseButton />
         </ModalHeader>
         <ModalBody>
-                <label class="form-label" for="name">Namn</label>
+                <label class="form-label" for="name">Produktnamn</label>
                 <InputText class="form-control" id="name" @bind-Value="productModel.Name" />
+                <ValidationMessage For="() => productModel.Name"/>
 
                 <label class="form-label" for="brand">Märke/tillverkare</label>
                 <InputText class="form-control" id="brand" @bind-Value="productModel.Brand" />
+                <ValidationMessage For="() => productModel.Brand"/>
+
 
                 <label class="form-label" for="desc">Beskrivning</label>
                 <InputText class="form-control" id="desc" @bind-Value="productModel.Description" />
+                <ValidationMessage For="() => productModel.Description"/>
 
-                <label class="form-label" for="unit">Enhet</label>
-                <InputNumber class="form-control" id="unit" @bind-Value="productModel.Unit" />
+                <label class="form-label" for="unit">Mängd</label>
+                <InputNumber class="form-control" id="unit" @bind-Value="productModel.UnitQty" />
+                <ValidationMessage For="() => productModel.UnitQty"/>
 
-                <label class="form-label" for="unitType">Enhetstyp</label>
-                <InputText class="form-control" id="uniType" @bind-Value="productModel.UnitType" />
+                 <label class="form-check-label" for="unit">Enhetstyp</label>
+                <InputSelect class="form-control" id="unit" @bind-Value="productModel.UnitID">
+                    <SelectItem Value="0" Disabled>Välj enhetstyp</SelectItem>
+                    @foreach (var unit in Units)
+                    {
+                        <option value="@unit.Id">@unit.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => productModel.Unit"/>
 
                 <label class="form-label" for="ToC">Innehållsförteckning</label>
                 <InputText class="form-control" id="ToC" @bind-Value="productModel.TableOfContent" />
+                 <ValidationMessage For="() => productModel.TableOfContent"/>
 
                 <label class="form-label" for="price">Pris</label>
                 <InputNumber class="form-control" id="price" @bind-Value="productModel.Price" />
+                <ValidationMessage For="() => productModel.Price"/>
 
                 <label class="form-label" for="category">Kategori</label>
                 <InputSelect class="form-control" id="category" @bind-Value="productModel.CategoryID">
@@ -41,12 +57,24 @@
                         <option value="@cat.Id">@cat.Name</option>
                     }
                 </InputSelect>
+                <ValidationMessage For="() => productModel.Category"/>
 
-                <label class="form-label" for="stock">Lagersaldo</label>
+                <label class="form-check-label" for="vegan">Vegan</label>
+                <InputCheckbox class="form-form-check-inline" id="vegan" @bind-Value="productModel.IsVegan"/>
+
+                <label class="form-check-label" for="glutenfree">Glutenfri</label>
+                <InputCheckbox class="form-check-inline" id="glutenfree" @bind-Value="productModel.IsGlutenfree"/>
+
+                <label class="form-form-check-label" for="eco">Ekologisk</label>
+                <InputCheckbox class="form-check-inline" id="eco" @bind-Value="productModel.IsEco"/>
+
+                <label class="form" for="stock" style="display:block">Lagersaldo</label>
                 <InputNumber class="form-control" id="stock" @bind-Value="productModel.Stock" />
+                <ValidationMessage For="() => productModel.Stock"/>
 
                 <label class="form-label" for="imgPath">Bildsökväg</label>
                 <InputText class="form-control" id="imgPath" @bind-Value="productModel.ImgPath" />
+                <ValidationMessage For="() => productModel.ImgPath"/>
 
         </ModalBody>
         <ModalFooter>
@@ -62,14 +90,16 @@
     public Product productModel { get; set; } = new();
     [Parameter]
     public EventCallback UpdateProductListEvent { get; set; }
-    
+
     private List<Category> Categories { get; set; } = new();
+    private List<Unit> Units { get; set; } = new();
     private string ModalTitle { get; set; }
     private Modal modalRef;    
 
     protected async override Task OnInitializedAsync()
     {
         Categories = await CategoryService.GetCategories();
+        Units = await UnitService.GetUnits();
     }
 
     public Task ShowModal(Product product, string modalTitle)

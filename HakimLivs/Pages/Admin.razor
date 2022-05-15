@@ -2,17 +2,20 @@
 
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Identity;
-@inject UserManager<IdentityUser> _UserManager
+@using HakimLivs.Data
+@inject UserManager<ApplicationUser> _UserManager
 @inject RoleManager<IdentityRole> _RoleManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject AdminService AdminService
 @inject ProductService ProductService
+@inject OrderService OrderService
 
 <AuthorizeView Roles="Administrators">
     <Authorized>
 
         <button class="btn btn-primary" @onclick='(() => ShowStuff("ShowProducts"))'>Produkter</button>
         <button class="btn btn-primary" @onclick='(() => ShowStuff("ShowUsers"))'>Användare</button>
+        <button class="btn btn-primary" @onclick='(() => ShowStuff("ShowOrders"))'>Ordrar</button>
 
         @if (showProducts)
         {
@@ -21,7 +24,12 @@
         @if (showUsers)
         {
             <AdminUsers ColUsers="@ColUsers"></AdminUsers>
-            
+
+        }
+         @if (showOrders)
+        {
+            <AdminOrders></AdminOrders>
+
         }
 
     </Authorized>
@@ -32,12 +40,13 @@
 </AuthorizeView>
 
 @code {
+
     private List<Product> ProductList;
 
     bool showProducts = false;
     bool showUsers = false;
+    bool showOrders = false;
 
-    string test = "";
 
     void ShowStuff(string text)
     {
@@ -45,15 +54,21 @@
         {
             case "ShowProducts":
                 showProducts = !showProducts;
-                if (true)
-                {
+                showUsers = false;
+                showOrders = false;
 
-                }
                 break;
             case "ShowUsers":
                 showUsers = !showUsers;
-                test = "AdminUsers";
+                showProducts = false;
+                showOrders = false;
                 break;
+            case "ShowOrders":
+                showOrders = !showOrders;
+                showProducts = false;
+                showUsers = false;
+                break;
+
         }
     }
 
@@ -73,6 +88,7 @@
     protected override async Task OnInitializedAsync()
     {
         ProductList = await ProductService.GetProducts();
+        //ordersList = await OrderService.GetAllOrdersAsync();
 
         // ensure there is a ADMINISTRATION_ROLE
         var RoleResult = await _RoleManager.FindByNameAsync(ADMINISTRATION_ROLE);
@@ -100,11 +116,11 @@
     }
 
     // Property used to add or edit the currently selected user
-    IdentityUser objUser = new IdentityUser();
+    ApplicationUser objUser = new ApplicationUser();
     // Tracks the selected role for the currently selected user
     string CurrentUserRole { get; set; } = "Users";
     // Collection to display the existing users
-    List<IdentityUser> ColUsers = new List<IdentityUser>();
+    List<ApplicationUser> ColUsers = new List<ApplicationUser>();
     // Options to display in the roles dropdown when editing a user
     List<string> Options = new List<string>() { "Users", "Administrators" };
     // To hold any possible errors
@@ -118,7 +134,7 @@
     async Task SaveUser()
     {
     }
-    async Task EditUser(IdentityUser _IdentityUser)
+    async Task EditUser(ApplicationUser _ApplicationUser)
     {
     }
     async Task DeleteUser()
@@ -135,9 +151,9 @@
         // clear any error messages
         strError = "";
         // Collection to hold users
-        ColUsers = new List<IdentityUser>();
+        ColUsers = new List<ApplicationUser>();
         // get users from _UserManager
-        var user = _UserManager.Users.Select(x => new IdentityUser
+        var user = _UserManager.Users.Select(x => new ApplicationUser
             {
                 Id = x.Id,
                 UserName = x.UserName,

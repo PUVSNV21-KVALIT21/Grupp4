@@ -1,4 +1,7 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using HakimLivs.Data
+@using Microsoft.AspNetCore.Identity
+@inject UserService UserService;
+
 <table class="table table-striped">
 
     <thead>
@@ -18,7 +21,11 @@
                 <td scope="col">
                     <button class="btn btn-primary"
                         @onclick="(() => EditUser(user))">
-                        Edit
+                        Ändra
+                    </button>
+                    <button class="btn btn-danger"
+                        @onclick="(() => DeleteUser(user))">
+                        Ta bort
                     </button>
                 </td>
             </tr>
@@ -28,9 +35,7 @@
 
 @code {
     [Parameter]
-    public List<IdentityUser> ColUsers { get; set; }
-
-
+    public List<ApplicationUser> ColUsers { get; set; }
 
     void AddNewUser()
     {
@@ -38,11 +43,18 @@
     async Task SaveUser()
     {
     }
-    async Task EditUser(IdentityUser _IdentityUser)
+    async Task EditUser(ApplicationUser _ApplicationUser)
     {
     }
-    async Task DeleteUser()
+    async Task DeleteUser(ApplicationUser user)
     {
+        await UserService.DeleteUser(user);
+         await UpdateUserList();
+    }
+
+    public async Task UpdateUserList()
+    {
+        ColUsers = await UserService.UpdateUsers();
     }
 
 }

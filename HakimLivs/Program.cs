@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using Microsoft.AspNet.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,15 +20,18 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
 builder.Services.AddTransient<ProductService>();
+builder.Services.AddTransient<UnitService>();
 builder.Services.AddTransient<CategoryService>();
 builder.Services.AddTransient<AdminService>();
+builder.Services.AddTransient<OrderService>();
+builder.Services.AddTransient<UserService>();
 builder.Services.AddScoped<CartState>();
 builder.Services
     .AddBlazorise(options =>

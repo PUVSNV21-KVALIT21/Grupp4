@@ -2,16 +2,20 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedLocalStorage ProtectedLocalStorage
 @inject CartState CartState
+@inject OrderService OrderService
 @implements IDisposable
 
 <h3>Kassa</h3>
 
 
 <h4>Varor:</h4>
+
 <div>
     @foreach (var p in CartState.selectedProducts)
     {
-        <div class="d-flex justify-content-between m-2">
+        if(p.Product != null)
+        {
+            <div class="d-flex justify-content-between m-2">
 
             <span>
                 @p.Product.Name
@@ -25,14 +29,27 @@
                 <button class="btn btn-primary" @onclick="(() => AddProductQuantity(p))">+</button>
             </span>
         </div>
+        }
+        
+    }
+</div>
+<label for="discountCode">Rabattkod</label>
+<input class="form-control-sm" name="discountCode" type="text" @bind-value="@discountCode" />
+<button type="button" class="btn btn-secondary" @onclick="(() => CheckDiscount(discountCode))">Aktivera</button>
+
+<p>@discountStatus</p>
+
+<div>
+    <p>Pris totalt: @CartState.totalPrice kr</p>
+    @if (isDiscountCodeValid)
+    {
+        <p>Rabatterat pris @discountPrice kr</p>
     }
 </div>
 
-<strong>@CartState.totalPrice kr</strong>
-
 <RadioGroup TValue="string" Name="colors" @bind-CheckedValue="@checkedValue">
-    <Radio Value="@("invoice")">Faktura</Radio>
-    <Radio Value="@("creditcard")">VISA/Mastercard</Radio>
+    <Radio Value="@("Faktura")">Faktura</Radio>
+    <Radio Value="@("VISA/Mastercard")">VISA/Mastercard</Radio>
 </RadioGroup>
 
 
@@ -59,14 +76,14 @@
 
             </h4>
 
-            @if (checkedValue == "invoice")
+            @if (checkedValue == "Faktura")
             {
-                <p>Vi skickar en faktura på @CartState.totalPrice kr till dig</p>
+                <p>Vi skickar en faktura på @orderPrice kr till dig</p>
             }
 
-            @if (checkedValue == "creditcard")
+            @if (checkedValue == "VISA/Mastercard")
             {
-                <p>Vi har debiterat @CartState.totalPrice kr från ditt kort </p>
+                <p>Vi har debiterat @orderPrice kr från ditt kort </p>
             }
 
 
@@ -84,17 +101,46 @@
 
 
 @code {
-    private string checkedValue = "invoice";
+    private string checkedValue = "Faktura";
+    private string discountCode;
+    private bool isDiscountCodeValid;
+    private string discountStatus = "";
+    private decimal? discountPrice;
+
+    private decimal? orderPrice;
 
     private bool orderButtonDisabled = false;
 
-    private bool modalVisible; 
+    private bool modalVisible;
 
-    private Task ShowModal()
+    private async Task ShowModal()
     {
+        await SaveOrder();
         modalVisible = true;
 
-        return Task.CompletedTask;
+        await Task.CompletedTask;
+    }
+    async Task SaveOrder()
+    {
+        orderPrice = isDiscountCodeValid ? discountPrice : CartState.totalPrice;
+        await OrderService.SaveOrder(CartState.selectedProducts, orderPrice, checkedValue, discountCode);
+    }
+
+    async Task CheckDiscount(string discountCode)
+    {
+        isDiscountCodeValid = await OrderService.CheckDiscount(discountCode);
+        discountStatus = isDiscountCodeValid ? "Rabattkod aktiverad" : "Rabattkod ogiltig";
+        if (isDiscountCodeValid)
+        {
+            ApplyDiscount();
+        }
+
+    }
+
+    async Task ApplyDiscount()
+    {
+        discountPrice = await OrderService.ApplyDiscount(discountCode, CartState.totalPrice);
+        orderPrice = discountPrice;
     }
 
     private Task HideModal()
