@@ -91,7 +91,7 @@ namespace HakimLivs.Services
                 var order = new Order
                 {
                     Basket = basket,
-                    DeliveryAdress = basket.User.Address,
+                    DeliveryAdress = basket.User.Address + ", " + basket.User.Postcode + ", " + basket.User.City,
                     DeliveryMethod = "PostNord",
                     Orderdate = DateTime.Now,
                     PaymentMethod = paymentMethod,

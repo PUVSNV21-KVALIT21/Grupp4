@@ -73,10 +73,12 @@ namespace HakimLivs.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [RegularExpression("^[a-öA-Ö-].*?$", ErrorMessage = "Bara bokstäver är tillåtna värden."), MaxLength(50)]
             [Display(Name = "First Name")]
             public string firstName { get; set; }
 
             [Required]
+            [RegularExpression("^[a-öA-Ö-].*?$", ErrorMessage = "Bara bokstäver är tillåtna värden."), MaxLength(50)]
             [Display(Name = "Last Name")]
             public string lastName { get; set; }
 
@@ -88,6 +90,7 @@ namespace HakimLivs.Areas.Identity.Pages.Account
             public DateTime Age { get; set; }
 
             [Required]
+            [RegularExpression("^[a-öA-Ö0-9].*?$", ErrorMessage = "Bara bokstäver och siffror är tillåtna värden."), MaxLength(100)]
             [Display(Name = "Address")]
             public string Address { get; set; }
             /// <summary>
@@ -95,8 +98,10 @@ namespace HakimLivs.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
+            [RegularExpression("^[a-öA-Ö0-9].*?$", ErrorMessage = "Bara bokstäver och siffror är tillåtna värden."), MaxLength(20)]
             public string Postcode { get; set; }
             [Required]
+            [RegularExpression("^[a-öA-Ö-].*?$", ErrorMessage = "Bara bokstäver är tillåtna värden."), MaxLength(50)]
             public string City { get; set; }
 
             [Required]
