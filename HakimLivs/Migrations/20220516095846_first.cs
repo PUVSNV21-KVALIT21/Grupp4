@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HakimLivs.Migrations
 {
-    public partial class First : Migration
+    public partial class first : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,7 +30,9 @@ namespace HakimLivs.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     firstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     lastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Postcode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Age = table.Column<DateTime>(type: "Date", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -242,7 +244,7 @@ namespace HakimLivs.Migrations
                     IsGlutenfree = table.Column<bool>(type: "bit", nullable: false),
                     IsEco = table.Column<bool>(type: "bit", nullable: false),
                     Stock = table.Column<int>(type: "int", nullable: false),
-                    ImgPath = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                    ImgPath = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -272,17 +274,11 @@ namespace HakimLivs.Migrations
                     Orderdate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DeliveryMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DeliveryAdress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TotalOrderValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    TotalOrderValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Orders_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_Baskets_BasketId",
                         column: x => x.BasketId,
@@ -376,11 +372,6 @@ namespace HakimLivs.Migrations
                 name: "IX_Baskets_UserID",
                 table: "Baskets",
                 column: "UserID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_ApplicationUserId",
-                table: "Orders",
-                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_BasketId",

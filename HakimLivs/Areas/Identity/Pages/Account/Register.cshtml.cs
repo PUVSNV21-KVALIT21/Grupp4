@@ -95,6 +95,11 @@ namespace HakimLivs.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
+            public string Postcode { get; set; }
+            [Required]
+            public string City { get; set; }
+
+            [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
@@ -146,7 +151,7 @@ namespace HakimLivs.Areas.Identity.Pages.Account
                 ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
                 if (ModelState.IsValid)
                 {
-                    var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, firstName = Input.firstName, lastName = Input.lastName, Age = Input.Age, Address = Input.Address };
+                    var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, firstName = Input.firstName, lastName = Input.lastName, Age = Input.Age, Address = Input.Address, City = Input.City, Postcode = Input.Postcode };
 
                     await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                     await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
