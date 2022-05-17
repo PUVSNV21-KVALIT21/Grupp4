@@ -73,10 +73,12 @@ namespace HakimLivs.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [RegularExpression("^[a-öA-Ö-].*?$", ErrorMessage = "Bara bokstäver är tillåtna värden."), MaxLength(50)]
             [Display(Name = "First Name")]
             public string firstName { get; set; }
 
             [Required]
+            [RegularExpression("^[a-öA-Ö-].*?$", ErrorMessage = "Bara bokstäver är tillåtna värden."), MaxLength(50)]
             [Display(Name = "Last Name")]
             public string lastName { get; set; }
 
@@ -88,12 +90,20 @@ namespace HakimLivs.Areas.Identity.Pages.Account
             public DateTime Age { get; set; }
 
             [Required]
+            [RegularExpression("^[a-öA-Ö0-9].*?$", ErrorMessage = "Bara bokstäver och siffror är tillåtna värden."), MaxLength(100)]
             [Display(Name = "Address")]
             public string Address { get; set; }
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            [Required]
+            [RegularExpression("^[a-öA-Ö0-9].*?$", ErrorMessage = "Bara bokstäver och siffror är tillåtna värden."), MaxLength(20)]
+            public string Postcode { get; set; }
+            [Required]
+            [RegularExpression("^[a-öA-Ö-].*?$", ErrorMessage = "Bara bokstäver är tillåtna värden."), MaxLength(50)]
+            public string City { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -146,7 +156,7 @@ namespace HakimLivs.Areas.Identity.Pages.Account
                 ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
                 if (ModelState.IsValid)
                 {
-                    var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, firstName = Input.firstName, lastName = Input.lastName, Age = Input.Age, Address = Input.Address };
+                    var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, firstName = Input.firstName, lastName = Input.lastName, Age = Input.Age, Address = Input.Address, City = Input.City, Postcode = Input.Postcode };
 
                     await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                     await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

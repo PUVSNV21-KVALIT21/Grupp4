@@ -58,7 +58,7 @@ namespace HakimLivs.Models
         public int Stock { get; set; }
 
         [Required(ErrorMessage = "Vänligen ange sökvägen till produktens bild.")]
-        [MaxLength(30, ErrorMessage = "Beskrivningen får inte innehålla fler än 500 tecken."), MinLength(3, ErrorMessage = "Namnet måste innehålla minst 3 tecken.")]
+        [MaxLength(1000, ErrorMessage = "Beskrivningen får inte innehålla fler än 1000 tecken."), MinLength(3, ErrorMessage = "Namnet måste innehålla minst 3 tecken.")]
         [RegularExpression("^(?!.*([<>{}\"\\[\\]])).*$", ErrorMessage = "Det ser ut som du försöker skriva in kod. Ajabaja!")]
         public string ImgPath { get; set; }
     }

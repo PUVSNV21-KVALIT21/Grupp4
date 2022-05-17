@@ -2,6 +2,7 @@
 using HakimLivs.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace HakimLivs.Services
 {
@@ -53,7 +54,7 @@ namespace HakimLivs.Services
         //    var listOfOrders = await _context.Orders.Include(o => o.ApplicationUser).ToListAsync();
         //    return listOfOrders;
         //}
-        public async Task SaveOrder(List<BasketProduct> basketProducts, decimal? orderValue, string paymentMethod, string discountCode)
+        public async Task SaveOrder(List<BasketProduct> basketProducts, decimal? orderValue, string paymentMethod, string discountCode, ClaimsPrincipal user)
         {
 
 
@@ -65,14 +66,16 @@ namespace HakimLivs.Services
             var basketProductList = new List<BasketProduct>();
 
 
-            LoggedInUserID = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
-            var user = await _userManager.FindByIdAsync(LoggedInUserID);
+            //LoggedInUserID =  _userManager.GetUserName(_httpContextAccessor.HttpContext.User);
+            //var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
             var basket = new Basket();
             var discount = _context.Discounts.Where(d => d.Code == discountCode).FirstOrDefault();
 
             basket.Discount = discount;
-            basket.UserID = LoggedInUserID;
-            basket.User = user;
+            basket.UserID = user.Identity.Name;
+
+            basket.User = await _context.Users.Where(u => u.UserName == user.Identity.Name).SingleAsync();
+            //basket.User = user.Identity.Name;
 
 
             foreach (var item in basketProducts)
@@ -83,17 +86,21 @@ namespace HakimLivs.Services
             }
             basketProductList.ForEach(bp => bp.Basket = basket);
             await _context.BasketProducts.AddRangeAsync(basketProducts);
-            var order = new Order
+            if(user != null)
             {
-                Basket = basket,
-                DeliveryAdress = basket.User.Address,
-                DeliveryMethod = "PostNord",
-                Orderdate = DateTime.Now,
-                PaymentMethod = paymentMethod,
-                TotalOrderValue = (decimal)orderValue
+                var order = new Order
+                {
+                    Basket = basket,
+                    DeliveryAdress = basket.User.Address + ", " + basket.User.Postcode + ", " + basket.User.City,
+                    DeliveryMethod = "PostNord",
+                    Orderdate = DateTime.Now,
+                    PaymentMethod = paymentMethod,
+                    TotalOrderValue = (decimal)orderValue
 
-            };
-            await _context.Orders.AddAsync(order);
+                };
+                await _context.Orders.AddAsync(order);
+
+            }
             await _context.SaveChangesAsync();
 
 
