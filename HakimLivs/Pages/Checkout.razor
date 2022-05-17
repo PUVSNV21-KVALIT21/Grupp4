@@ -56,7 +56,14 @@
 
 <AuthorizeView>
     <Authorized>
+        @if (CartState.selectedProducts.Count() == 0)
+        {
+            <p>Varukorgen är tom</p>
+        }
+        else
+        {
         <Button Color="Color.Primary" Clicked="@ShowModal">Beställ</Button>
+        }
     </Authorized>
     <NotAuthorized>
         <Button Color="Color.Primary" Clicked="@ShowModal" Disabled>Beställ</Button>
