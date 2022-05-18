@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,9 +33,11 @@ builder.Services.AddTransient<AdminService>();
 builder.Services.AddTransient<OrderService>();
 builder.Services.AddTransient<UserService>();
 builder.Services.AddScoped<CartState>();
+builder.Services.AddLocalization();
 builder.Services
     .AddBlazorise(options =>
     {
+        
         options.Immediate = true;
     })
     .AddBootstrapProviders()
@@ -57,7 +60,7 @@ else
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
-
+app.UseRequestLocalization("sv-SE");
 app.UseRouting();
 
 app.UseAuthentication();

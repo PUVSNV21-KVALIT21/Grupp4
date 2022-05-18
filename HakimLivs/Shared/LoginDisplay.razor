@@ -1,12 +1,27 @@
-﻿<AuthorizeView>
+﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage ProtectedLocalStorage
+@inject CartState CartState
+
+<AuthorizeView>
     <Authorized>
         <a href="Identity/Account/Manage">Hello, @context.User.Identity?.Name!</a>
         <form method="post" action="Identity/Account/LogOut">
-            <button type="submit" class="nav-link btn btn-link">Log out</button>
+            <button type="submit" class="nav-link btn btn-link" >Logout</button>
         </form>
     </Authorized>
     <NotAuthorized>
         <a href="Identity/Account/Register">Register</a>
-        <a href="Identity/Account/Login">Log in</a>
+        <a href="Identity/Account/Login" onclick="@ClearCart()">Log in</a>
     </NotAuthorized>
 </AuthorizeView>
+
+
+@code{
+    private async Task ClearCart()
+    {
+        await CartState.ClearCart();
+        await ProtectedLocalStorage.DeleteAsync("productsInCart");
+        await ProtectedLocalStorage.DeleteAsync("totalPrice");
+
+    }
+}
