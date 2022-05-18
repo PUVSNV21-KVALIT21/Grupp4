@@ -114,7 +114,7 @@
     private bool isDiscountCodeValid;
     private string discountStatus = "";
     private decimal? discountPrice;
-
+    private List<Order> orders;
     private decimal? orderPrice;
 
     private bool orderButtonDisabled = false;
@@ -139,11 +139,17 @@
     async Task CheckDiscount(string discountCode)
     {
         isDiscountCodeValid = await OrderService.CheckDiscount(discountCode);
-        discountStatus = isDiscountCodeValid ? "Rabattkod aktiverad" : "Rabattkod ogiltig";
-        if (isDiscountCodeValid)
+        orders = await OrderService.GetOrdersForUser();
+        if(!orders.Select(x => x.Basket.Discount.Code).Contains(discountCode))
         {
+            isDiscountCodeValid = true;
             ApplyDiscount();
         }
+        else
+        {
+            isDiscountCodeValid = false;
+        }
+        discountStatus = isDiscountCodeValid ? "Rabattkod aktiverad" : "Rabattkod ogiltig";
 
     }
 

@@ -1,6 +1,7 @@
 ﻿@using HakimLivs.Data
 @using Microsoft.AspNetCore.Identity
 @inject UserService UserService;
+@inject AdminService AdminService;
 
 <table class="table table-striped">
     <thead>
@@ -48,14 +49,14 @@
     {
     }
     async Task DeleteUser(ApplicationUser user)
-     {
+    {
+        await AdminService.SaveOrderHistory(user);
         await UserService.DeleteUser(user);
-         await UpdateUserList();
+        await UpdateUserList();
     }
 
     public async Task UpdateUserList()
     {
         ColUsers = await UserService.UpdateUsers();
     }
-
 }

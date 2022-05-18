@@ -34,6 +34,13 @@ namespace HakimLivs.Services
             var orderList = await _context.Orders.Include(o => o.Basket).ThenInclude(b => b.Discount).ToListAsync();
             return orderList;
         }
+        public async Task<List<Order>> GetOrdersForUser()
+        {
+            var LoggedInUserID = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
+            var user = await _userManager.FindByIdAsync(LoggedInUserID);
+            var orderList = await _context.Orders.Include(o => o.Basket).ThenInclude(b => b.Discount).Where(x => x.Basket.UserID == user.Id).ToListAsync();
+            return orderList;
+        }
         public async Task<OrderDetails> GetOrder(int id)
         {
             var order = await _context.Orders.Where(o => o.Id == id).Include(o => o.Basket).ThenInclude(b => b.User).Include(b => b.Basket).ThenInclude(b => b.Discount).SingleAsync();
