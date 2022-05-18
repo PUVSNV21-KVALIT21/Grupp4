@@ -27,7 +27,7 @@ namespace HakimLivs.Models
 
             var isAlreadyInBasket = selectedProducts.Where(bp => bp.Product == product).SingleOrDefault(new BasketProduct());
 
-            if (isAlreadyInBasket.Product != null && product.Stock > isAlreadyInBasket.ProductQuantity)
+            if (isAlreadyInBasket.Product != null && (product.Stock + isAlreadyInBasket.ProductQuantity) > isAlreadyInBasket.ProductQuantity)
             {
                 isAlreadyInBasket.ProductQuantity++;
                 totalPrice = totalPrice + product.Price;
@@ -52,7 +52,7 @@ namespace HakimLivs.Models
         public async Task AddProductQuantity(BasketProduct basketProduct)
         {
             var productIndex = selectedProducts.IndexOf(basketProduct);
-            if (selectedProducts[productIndex].Product.Stock > basketProduct.ProductQuantity)
+            if (selectedProducts[productIndex].Product.Stock + basketProduct.ProductQuantity > basketProduct.ProductQuantity)
             {
 
             selectedProducts[productIndex].ProductQuantity++;
