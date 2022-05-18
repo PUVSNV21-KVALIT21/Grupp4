@@ -14,39 +14,41 @@
 <div>
     @foreach (var p in CartState.selectedProducts)
     {
-        if(p.Product != null)
+        if (p.Product != null)
         {
             <div class="d-flex justify-content-between m-2">
 
-            <span>
-                @p.Product.Name
+                <span>
+                    @p.Product.Name
 
-            </span>
-            <span>
-                <button class="btn btn-primary" @onclick="(() => SubtractProductQuantity(p))">-</button>
+                </span>
+                <span>
+                    <button class="btn btn-primary" @onclick="(() => SubtractProductQuantity(p))">-</button>
 
-                @p.ProductQuantity
+                    @p.ProductQuantity
 
-                <button class="btn btn-primary" @onclick="(() => AddProductQuantity(p))">+</button>
-            </span>
-        </div>
+                    <button class="btn btn-primary" @onclick="(() => AddProductQuantity(p))">+</button>
+                </span>
+            </div>
         }
-        
+
     }
 </div>
-<label for="discountCode">Rabattkod</label>
-<input class="form-control-sm" name="discountCode" type="text" @bind-value="@discountCode" />
-<button type="button" class="btn btn-secondary" @onclick="(() => CheckDiscount(discountCode))">Aktivera</button>
 
-<p>@discountStatus</p>
-
-<div>
-    <p>Pris totalt: @CartState.totalPrice kr</p>
-    @if (isDiscountCodeValid)
-    {
-        <p>Rabatterat pris @discountPrice kr</p>
-    }
-</div>
+@if (CartState.selectedProducts.Count() != 0)
+{
+    <label for="discountCode">Rabattkod</label>
+    <input class="form-control-sm" name="discountCode" type="text" @bind-value="@discountCode" />
+    <button type="button" class="btn btn-secondary" @onclick="(() => CheckDiscount(discountCode))">Aktivera</button>
+    <p>@discountStatus</p>
+    <div>
+        <p>Pris totalt: @CartState.totalPrice kr</p>
+        @if (isDiscountCodeValid)
+        {
+            <p>Rabatterat pris @discountPrice kr</p>
+        }
+    </div>
+}
 
 <RadioGroup TValue="string" Name="colors" @bind-CheckedValue="@checkedValue">
     <Radio Value="@("Faktura")">Faktura</Radio>
@@ -62,7 +64,7 @@
         }
         else
         {
-        <Button Color="Color.Primary" Clicked="@ShowModal">Beställ</Button>
+            <Button Color="Color.Primary" Clicked="@ShowModal">Beställ</Button>
         }
     </Authorized>
     <NotAuthorized>
@@ -140,7 +142,7 @@
     {
         isDiscountCodeValid = await OrderService.CheckDiscount(discountCode);
         orders = await OrderService.GetOrdersForUser();
-        if(!orders.Select(x => x.Basket.Discount.Code).Contains(discountCode))
+        if (!orders.Select(x => x.Basket.Discount.Code).Contains(discountCode))
         {
             isDiscountCodeValid = true;
             ApplyDiscount();
