@@ -31,7 +31,7 @@ namespace HakimLivs.Services
 
         public async Task<List<Order>> GetOrders()
         {
-            var orderList = await _context.Orders.Include(o => o.Basket).ThenInclude(b => b.Discount).ToListAsync();
+            var orderList = await _context.Orders.Include(o => o.Basket).ThenInclude(b => b.Discount).Include(o => o.Basket).ThenInclude(b => b.User).ToListAsync();
             return orderList;
         }
         public async Task<List<Order>> GetOrdersForUser()
