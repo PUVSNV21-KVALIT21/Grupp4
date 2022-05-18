@@ -20,7 +20,7 @@ namespace HakimLivs.Services
 
         public async Task SaveOrderHistory(ApplicationUser userToBeRemoved)
         {
-            var user = await _userManager.FindByIdAsync("836d7d5c-5691-474d-8a0b-ddc9a5ac80ff");
+            var user = await _userManager.FindByNameAsync("MrGeneric@example.com");
             var orderList = _context.Orders.Select(x => x).Include(x => x.Basket).Include(x => x.Basket.Discount).Where(x => x.Basket.UserID == userToBeRemoved.Id).ToList();
             var oldbasketList = _context.Baskets.Select(x => x).Where(x => x.UserID == userToBeRemoved.Id).ToList();
             //var oldBasketList = new List<Basket>();
