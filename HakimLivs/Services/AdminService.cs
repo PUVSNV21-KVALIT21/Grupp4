@@ -1,5 +1,6 @@
 ﻿using HakimLivs.Data;
 using HakimLivs.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace HakimLivs.Services
@@ -7,10 +8,36 @@ namespace HakimLivs.Services
     public class AdminService
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AdminService(ApplicationDbContext context)
+        public AdminService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public async Task SaveOrderHistory(ApplicationUser userToBeRemoved)
+        {
+            var user = await _userManager.FindByIdAsync("836d7d5c-5691-474d-8a0b-ddc9a5ac80ff");
+            var orderList = _context.Orders.Select(x => x).Include(x => x.Basket).Include(x => x.Basket.Discount).Where(x => x.Basket.UserID == userToBeRemoved.Id).ToList();
+            var oldbasketList = _context.Baskets.Select(x => x).Where(x => x.UserID == userToBeRemoved.Id).ToList();
+            //var oldBasketList = new List<Basket>();
+            
+            foreach(var basket in oldbasketList)
+            {
+                basket.UserID = user.Id;
+            }
+            _context.Baskets.UpdateRange(oldbasketList);
+
+            foreach (var order in orderList)
+            {
+                order.DeliveryAdress = user.Address;
+            }
+            _context.Orders.UpdateRange(orderList);
+
+            _context.SaveChanges();
         }
 
         public async Task LoadTestData()
