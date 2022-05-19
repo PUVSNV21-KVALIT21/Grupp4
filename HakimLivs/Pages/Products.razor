@@ -1,4 +1,4 @@
-﻿@using HakimLivs.Services
+﻿    @using HakimLivs.Services
 @using HakimLivs.Models
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedLocalStorage ProtectedLocalStorage
@@ -22,7 +22,7 @@
 
             <Div ElementId="tooltip-custom-target">
                 <Tooltip Text=@hover> 
-                    <div class="product-card card text-center m-1" style="width: 15rem;">
+                    <div class="product-card card text-center m-1"">
                         <div class="card-body">
                             <img src="@p.ImgPath" class="img" alt="@p.Name" width="200" height="200" style="object-fit:contain" />
                             <p>@p.Price kr/st</p>
