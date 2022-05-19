@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedLocalStorage ProtectedLocalStorage
 @inject CartState CartState
+@inject ProductService ProductService
 
 <AuthorizeView>
     <Authorized>
@@ -19,6 +20,11 @@
 @code{
     private async Task ClearCart()
     {
+        var basket = CartState.selectedProducts.ToList();
+        foreach(var basketproduct in basket)
+        {
+            await ProductService.SaveProductFormBasketOnClose(basketproduct.Product);
+        }
         await CartState.ClearCart();
         await ProtectedLocalStorage.DeleteAsync("productsInCart");
         await ProtectedLocalStorage.DeleteAsync("totalPrice");

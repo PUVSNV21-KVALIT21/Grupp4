@@ -61,6 +61,22 @@ namespace HakimLivs.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task SaveProductFormBasketOnClose(Product product)
+        {
+            var alreadyExists = await _context.Products.FindAsync(product.Id);
+            if (alreadyExists == null)
+            {
+                _context.Products.Add(product);
+            }
+            else
+            {
+                alreadyExists.Stock += product.Stock;
+                _context.Products.Update(alreadyExists);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task DeleteProduct(Product product)
         {
             _context.Products.Remove(product);

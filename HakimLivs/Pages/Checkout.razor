@@ -170,6 +170,7 @@
 
     private async Task ClearCart()
     {
+
         await CartState.ClearCart();
         await ProtectedLocalStorage.DeleteAsync("productsInCart");
         await ProtectedLocalStorage.DeleteAsync("totalPrice");
