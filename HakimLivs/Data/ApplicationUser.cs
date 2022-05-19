@@ -25,7 +25,5 @@ namespace HakimLivs.Data
         [Column(TypeName = "Date")]
         public DateTime Age { get; set; }
 
-        public List<Discount> UsedDiscounts { get; set; }
-
     }
 }
