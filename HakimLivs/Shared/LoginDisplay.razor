@@ -7,12 +7,12 @@
     <Authorized>
         <a href="Identity/Account/Manage">Hello, @context.User.Identity?.Name!</a>
         <form method="post" action="Identity/Account/LogOut">
-            <button type="submit" class="nav-link btn btn-link" >Logout</button>
+            <button type="submit" class="nav-link btn btn-link" onclick="@ClearCart()" >Logout</button>
         </form>
     </Authorized>
     <NotAuthorized>
         <a href="Identity/Account/Register">Register</a>
-        <a href="Identity/Account/Login" onclick="@ClearCart()">Log in</a>
+        <a href="Identity/Account/Login" onclick="@SaveBasketToStock()">Log in</a>
     </NotAuthorized>
 </AuthorizeView>
 
@@ -20,14 +20,19 @@
 @code{
     private async Task ClearCart()
     {
+        
+        await CartState.ClearCart();
+        await ProtectedLocalStorage.DeleteAsync("productsInCart");
+        await ProtectedLocalStorage.DeleteAsync("totalPrice");
+
+    }
+
+    private async Task SaveBasketToStock()
+    {
         var basket = CartState.selectedProducts.ToList();
         foreach(var basketproduct in basket)
         {
             await ProductService.SaveProductFormBasketOnClose(basketproduct.Product);
         }
-        await CartState.ClearCart();
-        await ProtectedLocalStorage.DeleteAsync("productsInCart");
-        await ProtectedLocalStorage.DeleteAsync("totalPrice");
-
     }
 }
