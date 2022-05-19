@@ -1,6 +1,7 @@
 ﻿
 
 using HakimLivs.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace HakimLivs.Models
 
@@ -42,7 +43,7 @@ namespace HakimLivs.Models
                 product.Stock--;
             }
             _context.Products.Update(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             NotifyStateChanged();
         }
@@ -55,11 +56,11 @@ namespace HakimLivs.Models
             if (selectedProducts[productIndex].Product.Stock + basketProduct.ProductQuantity > basketProduct.ProductQuantity)
             {
 
-            selectedProducts[productIndex].ProductQuantity++;
-            totalPrice = totalPrice + selectedProducts[productIndex].Product.Price;
+                selectedProducts[productIndex].ProductQuantity++;
+                totalPrice = totalPrice + selectedProducts[productIndex].Product.Price;
                 basketProduct.Product.Stock--;
                 _context.Products.Update(basketProduct.Product);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 NotifyStateChanged();
             }
         }
@@ -81,12 +82,26 @@ namespace HakimLivs.Models
                 basketProduct.Product.Stock++;
             }
             _context.Products.Update(basketProduct.Product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             NotifyStateChanged();
         }
 
         public async Task ClearCart()
         {
+            var products = await _context.Products.ToListAsync();
+
+            foreach (var bp in selectedProducts)
+            {
+                var product = products.Where(p => p.Id == bp.Product.Id).FirstOrDefault();
+                var productStock = bp.Product.Stock;
+                var bpQ = bp.ProductQuantity;
+                //bp.Product.Stock = productStock + bpQ;
+                product.Stock = productStock + bpQ;
+                _context.Products.Update(product);
+                await _context.SaveChangesAsync();
+            }
+
+
             selectedProducts.Clear();
             totalPrice = 0;
             NotifyStateChanged();

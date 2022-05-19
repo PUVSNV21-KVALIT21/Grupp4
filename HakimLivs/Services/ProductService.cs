@@ -15,11 +15,14 @@ namespace HakimLivs.Services
 
         public async Task<List<Product>> GetProducts()
         {
+            await Task.Delay(1000);
+
             var products = await _context.Products.Include(p => p.Unit).Include(p => p.Category).ToListAsync();
             return products;
         }
         public async Task<Product> GetProduct(int id)
         {
+
             var product = await _context.Products.Where(p => p.Id == id).Include(p => p.Unit).Include(p => p.Category).FirstOrDefaultAsync();
             return product;
         }

@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedLocalStorage ProtectedLocalStorage
+@inject ProductService ProductService
 @inject CartState CartState
 
 <AuthorizeView>
@@ -11,14 +12,34 @@
     </Authorized>
     <NotAuthorized>
         <a href="Identity/Account/Register">Register</a>
-        <a href="Identity/Account/Login" onclick="@ClearCart()">Log in</a>
+        <a href="Identity/Account/Login"  onclick="@ClearCart1()">Log in</a>
     </NotAuthorized>
 </AuthorizeView>
 
 
 @code{
-    private async Task ClearCart()
+    private async Task ClearCart1()
     {
+
+        var productsInStorage = await ProtectedLocalStorage.GetAsync<List<BasketProduct>>("productsInCart");
+            var products = productsInStorage.Success ? productsInStorage.Value.ToList() : null;
+            var totalPriceInStorage = await ProtectedLocalStorage.GetAsync<decimal>("totalPrice");
+            var totalprice = totalPriceInStorage.Success ? totalPriceInStorage.Value : 0;
+
+            var bpList = new List<BasketProduct>();
+            if (products != null && totalprice != 0)
+            {
+                foreach (var item in products)
+                {
+                    var product = await ProductService.GetProduct(item.Product.Id);
+                    bpList.Add(new BasketProduct { Product = product, ProductQuantity = item.ProductQuantity });
+                }
+                CartState.selectedProducts = bpList;
+                CartState.totalPrice = totalprice;
+                CartState.NotifyStateChanged();
+            }
+
+
         await CartState.ClearCart();
         await ProtectedLocalStorage.DeleteAsync("productsInCart");
         await ProtectedLocalStorage.DeleteAsync("totalPrice");
