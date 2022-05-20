@@ -130,7 +130,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender && CartState.IsLoggingOut == false)
         {
             var productsInStorage = await ProtectedLocalStorage.GetAsync<List<BasketProduct>>("productsInCart");
             var products = productsInStorage.Success ? productsInStorage.Value.ToList() : null;

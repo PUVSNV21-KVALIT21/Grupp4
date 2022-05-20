@@ -7,37 +7,37 @@
     <Authorized>
         <a href="Identity/Account/Manage">Hello, @context.User.Identity?.Name!</a>
         <form method="post" action="Identity/Account/LogOut">
-            <button type="submit" class="nav-link btn btn-link" >Logout</button>
+            <button type="submit" class="nav-link btn btn-link">Logout</button>
         </form>
     </Authorized>
     <NotAuthorized>
         <a href="Identity/Account/Register">Register</a>
-        <a href="Identity/Account/Login"  onclick="@ClearCart1()">Log in</a>
+        <a href="Identity/Account/Login" onclick="@ClearCart1()">Log in</a>
     </NotAuthorized>
 </AuthorizeView>
 
 
-@code{
+@code {
     private async Task ClearCart1()
     {
-
+        CartState.IsLoggingOut = true;
         var productsInStorage = await ProtectedLocalStorage.GetAsync<List<BasketProduct>>("productsInCart");
-            var products = productsInStorage.Success ? productsInStorage.Value.ToList() : null;
-            var totalPriceInStorage = await ProtectedLocalStorage.GetAsync<decimal>("totalPrice");
-            var totalprice = totalPriceInStorage.Success ? totalPriceInStorage.Value : 0;
+        var products = productsInStorage.Success ? productsInStorage.Value.ToList() : null;
+        var totalPriceInStorage = await ProtectedLocalStorage.GetAsync<decimal>("totalPrice");
+        var totalprice = totalPriceInStorage.Success ? totalPriceInStorage.Value : 0;
 
-            var bpList = new List<BasketProduct>();
-            if (products != null && totalprice != 0)
+        var bpList = new List<BasketProduct>();
+        if (products != null && totalprice != 0)
+        {
+            foreach (var item in products)
             {
-                foreach (var item in products)
-                {
-                    var product = await ProductService.GetProduct(item.Product.Id);
-                    bpList.Add(new BasketProduct { Product = product, ProductQuantity = item.ProductQuantity });
-                }
-                CartState.selectedProducts = bpList;
-                CartState.totalPrice = totalprice;
-                CartState.NotifyStateChanged();
+                var product = await ProductService.GetProduct(item.Product.Id);
+                bpList.Add(new BasketProduct { Product = product, ProductQuantity = item.ProductQuantity });
             }
+            CartState.selectedProducts = bpList;
+            CartState.totalPrice = totalprice;
+            CartState.NotifyStateChanged();
+        }
 
 
         await CartState.ClearCart();

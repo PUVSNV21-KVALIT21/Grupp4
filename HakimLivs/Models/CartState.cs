@@ -19,7 +19,7 @@ namespace HakimLivs.Models
 
         public decimal? totalPrice { get; set; } = 0;
         public event Action OnChange;
-
+        public bool IsLoggingOut { get; set; } = false;
 
 
         public async Task AddProduct(Product product)
@@ -88,16 +88,16 @@ namespace HakimLivs.Models
 
         public async Task ClearCart()
         {
-            var products = await _context.Products.ToListAsync();
+            //var products = await _context.Products.ToListAsync();
 
             foreach (var bp in selectedProducts)
             {
-                var product = products.Where(p => p.Id == bp.Product.Id).FirstOrDefault();
+                //var product = products.Where(p => p.Id == bp.Product.Id).FirstOrDefault();
                 var productStock = bp.Product.Stock;
                 var bpQ = bp.ProductQuantity;
-                //bp.Product.Stock = productStock + bpQ;
-                product.Stock = productStock + bpQ;
-                _context.Products.Update(product);
+                bp.Product.Stock = productStock + bpQ;
+                //product.Stock = productStock + bpQ;
+                _context.Products.Update(bp.Product);
                 await _context.SaveChangesAsync();
             }
 
