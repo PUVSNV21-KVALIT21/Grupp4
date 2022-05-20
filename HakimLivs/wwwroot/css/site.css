@@ -108,3 +108,20 @@ a, .btn-link {
     }
 }
 
+@media screen and (max-width: 375px) {
+    .m-1 {
+        width: 7rem;
+    }
+
+    .text-center,
+    .card,
+    .product-card {
+        width: 9rem;
+    }
+
+    .img {
+        width: 100px;
+        height: 100px;
+    }
+}
+
