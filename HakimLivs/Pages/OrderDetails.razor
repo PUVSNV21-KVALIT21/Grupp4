@@ -33,11 +33,13 @@
         <div class="d-flex gap-5">
 
             <div>
+                <p>Order-ID:</p>
                 <p>Orderdatum:</p>
                 <p>Leveranssätt:</p>
                 <p>Betalningssätt:</p>
             </div>
             <div>
+                <p>@orderDetails.Order.Id</p>
                 <p>@orderDetails.Order.Orderdate.ToShortDateString()</p>
                 <p>@orderDetails.Order.DeliveryMethod</p>
                 <p>@orderDetails.Order.PaymentMethod</p>
