@@ -43,11 +43,12 @@
 
                                 </span>
                                 <span>
-                                    <button class="btn btn-primary" @onclick="(() => SubtractProductQuantity(p))">-</button>
+                                    
+                                    <button class="btn btn-primary" @onclick="@(async () => {await Increment(); SubtractProductQuantity(p);})">-</button>
 
                                     @p.ProductQuantity
 
-                                    <button class="btn btn-primary" @onclick="(() => AddProductQuantity(p))">+</button>
+                                    <button class="btn btn-primary" @onclick="@(async () => {await Increment(); AddProductQuantity(p);})">+</button>
                                 </span>
                             </div>
                             }
@@ -80,6 +81,14 @@
 
 
     private bool modalVisible;
+
+    
+
+    async Task Increment()
+    {
+            await Task.Delay(1000);
+    }
+
 
     private async Task AddProductQuantity(BasketProduct basketProduct)
     {
