@@ -35,7 +35,7 @@
                                 <span>@p.Unit.Name </span>
                             </div>
 
-                            <button @onclick="(() => AddToCart(p))" class="btn btn-primary">Lägg till i varukorg</button>
+                            <button @onclick="@(async () => {await Increment(); AddToCart(p);})" class="btn btn-primary">Lägg till i varukorg</button>
 
                         </div>
                     </div>
@@ -51,6 +51,11 @@
     public List<Product> ProductList { get; set; }
     [Parameter]
     public string SearchTerm { get; set; }
+
+    async Task Increment()
+    {
+            await Task.Delay(1000);
+    }
 
     protected override void OnInitialized()
     {
