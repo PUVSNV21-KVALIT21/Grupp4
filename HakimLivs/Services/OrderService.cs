@@ -119,12 +119,12 @@ namespace HakimLivs.Services
 
         public async Task<bool> CheckDiscount(string discountCode)
         {
-            var discount = _context.Discounts.Where(d => d.Code == discountCode).Any();
+            var discount = await _context.Discounts.Where(d => d.Code == discountCode).AnyAsync();
             return discount;
         }
         public async Task<decimal?> ApplyDiscount(string discountCode, decimal? orderValue)
         {
-            var discount = _context.Discounts.Where(d => d.Code == discountCode).FirstOrDefault();
+            var discount = await _context.Discounts.Where(d => d.Code == discountCode).FirstAsync();
 
             var discountCalc = orderValue * ((decimal)discount.Percentage / 100);
             var newOrderValue = orderValue - discountCalc;

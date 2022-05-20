@@ -86,7 +86,7 @@
         ProductList = await ProductService.GetProducts();
         if(ProductList != null || ProductList.Count() != 0)
         {
-            CartState.AddProductQuantity(basketProduct);
+            await CartState.AddProductQuantity(basketProduct);
             await ProtectedLocalStorage.SetAsync("productsInCart", CartState.selectedProducts);
             await ProtectedLocalStorage.SetAsync("totalPrice", CartState.totalPrice);
         }
@@ -130,7 +130,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender && CartState.IsLoggingOut == false)
         {
             var productsInStorage = await ProtectedLocalStorage.GetAsync<List<BasketProduct>>("productsInCart");
             var products = productsInStorage.Success ? productsInStorage.Value.ToList() : null;
