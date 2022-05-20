@@ -1,5 +1,6 @@
 ﻿using HakimLivs.Data;
 using HakimLivs.Models;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -13,6 +14,7 @@ namespace HakimLivs.Services
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly AuthenticationStateProvider _authenticationStateProvider;
 
         public class OrderDetails
         {
@@ -22,12 +24,13 @@ namespace HakimLivs.Services
             public List<BasketProduct> BasketProducts { get; set; }
         }
 
-        public OrderService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
+        public OrderService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, AuthenticationStateProvider authenticationStateProvider)
         {
             _context = context;
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
-        }
+            _authenticationStateProvider = authenticationStateProvider;
+    }
 
         public async Task<List<Order>> GetOrders()
         {
@@ -36,9 +39,10 @@ namespace HakimLivs.Services
         }
         public async Task<List<Order>> GetOrdersForUser()
         {
-            var LoggedInUserID = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
-            var user = await _userManager.FindByIdAsync(LoggedInUserID);
-            var orderList = await _context.Orders.Include(o => o.Basket).ThenInclude(b => b.Discount).Where(x => x.Basket.UserID == user.Id).ToListAsync();
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var userProfile = _context.Users.Where(x => x.UserName == user.Identity.Name).FirstOrDefault();
+            var orderList = await _context.Orders.Include(o => o.Basket).ThenInclude(b => b.Discount).Where(x => x.Basket.UserID == userProfile.Id).ToListAsync();
             return orderList;
         }
         public async Task<OrderDetails> GetOrder(int id)
