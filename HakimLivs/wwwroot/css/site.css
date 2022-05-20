@@ -79,3 +79,32 @@ a, .btn-link {
     .product-card:hover {
         transform: scale(1.01);
     }
+
+.m-1{
+    width: 12rem;
+    margin:0;
+}
+.text-center,
+.card,
+.product-card {
+    width: 15rem;
+}
+
+/*___________________________________*/
+/*Mediqueries for productcards*/
+
+@media screen and (max-width: 513px) {
+    .m-1{
+        width:9rem;
+    }
+    .text-center,
+    .card,
+    .product-card{
+        width: 10rem;
+    }
+    .img {
+        width: 100px;
+        height: 100px;
+    }
+}
+

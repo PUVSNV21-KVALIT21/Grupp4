@@ -90,7 +90,11 @@ namespace HakimLivs.Models
             selectedProducts.Clear();
             totalPrice = 0;
             NotifyStateChanged();
+            //for (int i = 0; i < selectedProducts.Count(); i++)
+            //{
 
+            //    SubtractProductQuantity();
+            //}
         }
 
 
