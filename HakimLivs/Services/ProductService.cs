@@ -20,6 +20,7 @@ namespace HakimLivs.Services
         }
         public async Task<Product> GetProduct(int id)
         {
+
             var product = await _context.Products.Where(p => p.Id == id).Include(p => p.Unit).Include(p => p.Category).FirstOrDefaultAsync();
             return product;
         }
@@ -30,7 +31,7 @@ namespace HakimLivs.Services
                 .Where(l =>
                         l.Name.Contains(search) ||
                         l.Brand.Contains(search)
-                    //||l.Category.Contains(search)
+                //||l.Category.Contains(search)
                 )
                 .ToListAsync();
 
